@@ -1,57 +1,81 @@
 package io.blueapps.lightspace.socket;
 
 import android.util.Log;
+import android.util.Pair;
 
-import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 
-import java.net.URISyntaxException;
+import org.json.JSONObject;
+
+import java.net.MalformedURLException;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import io.blueapps.lightspace.bleutooth.BluetoothLeService;
+import io.socket.IOAcknowledge;
+import io.socket.IOCallback;
+import io.socket.SocketIO;
+import io.socket.SocketIOException;
 
 /**
  * Created by bartolkaruza on 20/05/14.
  */
 public class MeasurementSender {
 
-    Socket socket;
+    private SocketIO socket;
 
     public MeasurementSender() {
+        socket = null;
         try {
-            socket = IO.socket("http://bartolkaruza-measure-app.nodejitsu.com");
-        } catch (URISyntaxException e) {
+//            socket = new SocketIO("http://192.168.1.88:3000/");
+            socket = new SocketIO("http://bartolkaruza-measure-app.nodejitsu.com/");
+//            socket = new SocketIO("http://10.0.2.2:3000");
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-
+        socket.connect(new IOCallback() {
             @Override
-            public void call(Object... args) {
-                socket.emit("foo", "hi");
-                socket.disconnect();
+            public void onMessage(String data, IOAcknowledge ack) {
+                Log.d("onMessage", data);
             }
 
-        }).on("event", new Emitter.Listener() {
-
             @Override
-            public void call(Object... args) {
-                for(Object message : args) {
-                    Log.d("test", message.toString());
-                }
+            public void onMessage(JSONObject jsonObject, IOAcknowledge ioAcknowledge) {
+                Log.d("onMessage", jsonObject.toString());
             }
 
-        }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+            @Override
+            public void on(String s, IOAcknowledge ioAcknowledge, Object... objects) {
+                Log.d("on", s);
+            }
 
             @Override
-            public void call(Object... args) {
-                for(Object message : args) {
-                    Log.d("disconnect", message.toString());
-                }
+            public void onError(SocketIOException socketIOException) {
+                Log.e("onError", socketIOException.getMessage());
+            }
+
+            @Override
+            public void onDisconnect() {
+                Log.d("onDisconnect", "Connection terminated.");
+            }
+
+            @Override
+            public void onConnect() {
+                Log.d("onConnect", "Connection established");
             }
 
         });
-        socket.connect();
     }
 
-    public void send(String message) {
-        socket.send("measurement", message);
+    public void updateMeasurement(List<Pair<String, Integer>> measurements) {
+        String time = DateFormat.getDateTimeInstance().format(new Date(System.currentTimeMillis()));
+        if(socket != null) {
+            Log.d("sender", "sending measurement with: " + time);
+            Gson gson = new Gson();
+            socket.emit("measurement", gson.toJson(new MeasureEvent(BluetoothLeService.MY_UUID, measurements)));
+        }
     }
 }

@@ -2,8 +2,11 @@ package io.blueapps.lightspace;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.ArrayList;
 
 import io.blueapps.lightspace.socket.MeasurementSender;
 
@@ -15,8 +18,7 @@ public class LightSpaceActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_light_space_activitiy);
         MeasurementSender sender = new MeasurementSender();
-        sender.send("someMessage");
-
+        sender.updateMeasurement(new ArrayList<Pair<String, Integer>>());
     };
 
     @Override

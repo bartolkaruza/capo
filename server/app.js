@@ -18,9 +18,9 @@ var routes = require('./routes');
 var http = require('http');
 var path = require('path');
 
-var app = express();
-    server = http.createServer(app);
-//    io = require('socket.io').listen(server);
+var app = express(),
+    server = http.createServer(app),
+    io = require('socket.io').listen(server);
 
 var port = 3000;
 
@@ -40,19 +40,17 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-//io.sockets.on('connection', function (socket) {
-//    socket.on('foo', function(message) {
-//       console.log(message);
-//    });
-//    socket.on('measurement', function (measurement) {
-//        socket.broadcast.emit('measurement', measurement);
-//    });
-//});
-//io.sockets.on('disconnect', function(socket) {
-//   console.log('disconnect: ' + socket);
-//});
-
-
+io.sockets.on('connection', function (socket) {
+    socket.on('foo', function(message) {
+       console.log(message);
+    });
+    socket.on('measurement', function (measurement) {
+        socket.broadcast.emit('measurement', measurement);
+    });
+});
+io.sockets.on('disconnect', function(socket) {
+   console.log('disconnect: ' + socket);
+});
 
 var options = {
 
