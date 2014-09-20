@@ -7,6 +7,7 @@ exports.init = function(socketIo) {
     io = socketIo;
     io.sockets.on('connection', function (socket) {
         socket.on('foo', function(message) {
+            socket.emit('bar', message);
             console.log(message);
         });
         socket.on('measurement', function (measurement) {
@@ -73,31 +74,40 @@ function updateMeasurement(measurement) {
     }
     if(sourceNumber === 1) {
         if(targetNumber === 2) {
-            updateColor(mapping.player12, measurement.rssi);
+            game.currentColor = updateColor(mapping.player12, measurement.rssi, game.measurements[player12]);
         } else if(targetNumber === 3) {
-            updateColor(mapping.player13, measurement.rssi);
+            game.currentColor = updateColor(mapping.player13, measurement.rssi, game.measurements[player13]);
         }
     } else if(sourceNumber === 2) {
         if(targetNumber === 1) {
-            updateColor(mapping.player12, measurement.rssi);
+            game.currentColor = updateColor(mapping.player12, measurement.rssi, game.measurements[player12]);
         } else if(targetNumber === 3) {
-            updateColor(mapping.player23, measurement.rssi);
+            game.currentColor = updateColor(mapping.player23, measurement.rssi, game.measurements[player23]);
         }
     } else if(sourceNumber === 3) {
         if(targetNumber === 1) {
-            updateColor(mapping.player13, measurement.rssi);
+            game.currentColor = updateColor(mapping.player13, measurement.rssi, game.measurements[player13]);
         } else if(targetNumber === 2) {
-            updateColor(mapping.player23, measurement.rssi);
+            game.currentColor = updateColor(mapping.player23, measurement.rssi, game.measurements[player23]);
         }
     }
 }
 
-function updateColor(pair, rssi) {
-    currentColor[mapping[pair]] = calculateColorValue(rssi);
+function updateColor(pair, rssi, measurements) {
+    return calculateColorValue(rssi, currentColor[mapping[pair]], measurements);
 }
 
-function calculateColorValue(rssi) {
+function calculateColorValue(rssi, currentValue, measurements) {
+    var oldRssi = measurements.last();
+    measurements.shift();
+    measurements.push(rssi);
+    var newRssi = (oldRssi + rssi);
+    currentValue = newRssi
     return 1;
+}
+
+function map() {
+
 }
 
 function getRandomColor() {
