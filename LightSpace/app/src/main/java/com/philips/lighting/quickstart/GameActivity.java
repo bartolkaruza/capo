@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -15,6 +16,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.http.GameRESTfulService;
+import com.http.data.DeviceAddress;
+import com.http.data.Game;
 import com.philips.lighting.data.AccessPointListAdapter;
 import com.philips.lighting.data.HueSharedPreferences;
 import com.philips.lighting.hue.sdk.PHAccessPoint;
@@ -29,12 +33,17 @@ import com.philips.lighting.model.PHHueParsingError;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 import io.blueapps.lightspace.R;
 import io.blueapps.lightspace.bleutooth.MyBluetoothDevice;
 import io.blueapps.lightspace.socket.MeasurementPair;
 import io.blueapps.lightspace.socket.MeasurementSender;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * PHHomeActivity - The starting point in your own Hue App.
@@ -48,9 +57,11 @@ import io.blueapps.lightspace.socket.MeasurementSender;
  * 
  *
  */
-public class GameActivity extends Activity implements OnItemClickListener {
+public class GameActivity extends Activity implements OnItemClickListener, Callback<Game> {
 
     public static final String KEY_MODE = "mode";
+    public static final String KEY_ADRESS = "adress";
+    public static final String KEY_GAME_ID = "gameid";
 
     public static final int MODE_JOIN = 0;
     public static final int MODE_HOST = 1;
@@ -59,6 +70,8 @@ public class GameActivity extends Activity implements OnItemClickListener {
     private static final int REQUEST_ENABLE_BT = 1;
 
     private int mode = MODE_JOIN;
+    private String deviceAdress;
+    private String gameID;
 
     private PHHueSDK phHueSDK;
     public static final String TAG = "QuickStart";
@@ -73,14 +86,28 @@ public class GameActivity extends Activity implements OnItemClickListener {
 
     private boolean lastSearchWasIPScan = false;
 
+    @InjectView(R.id.gameView)
+    protected View gameView;
+
+    // TODO fix deviceAddress
+    DeviceAddress address = new DeviceAddress("");
+    GameRESTfulService gameService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bridgelistlinear);
+        ButterKnife.inject(this);
+
 
         if (getIntent().getExtras() != null) {
             this.mode = getIntent().getIntExtra(KEY_MODE, MODE_JOIN);
+            this.deviceAdress = getIntent().getStringExtra(KEY_ADRESS);
+            this.gameID = getIntent().getStringExtra(KEY_GAME_ID);
         }
+
+        gameService = GameRESTfulService.getInstance(new DeviceAddress(deviceAdress));
+        gameService.getGame(gameID,this);
 
         mHandler = new Handler();
         initBLE();
@@ -265,12 +292,7 @@ public class GameActivity extends Activity implements OnItemClickListener {
             else if (code == PHHueError.BRIDGE_NOT_RESPONDING) {
                 Log.w(TAG, "Bridge Not Responding . . . ");
                 PHWizardAlertDialog.getInstance().closeProgressDialog();
-                GameActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        PHWizardAlertDialog.showErrorDialog(GameActivity.this, message, R.string.btn_ok);
-                    }
-                });
+                Crouton.makeText(GameActivity.this,message,Style.ALERT);
 
             }
             else if (code == PHMessageType.BRIDGE_NOT_FOUND) {
@@ -283,12 +305,7 @@ public class GameActivity extends Activity implements OnItemClickListener {
                 }
                 else {
                     PHWizardAlertDialog.getInstance().closeProgressDialog();
-                    GameActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            PHWizardAlertDialog.showErrorDialog(GameActivity.this, message, R.string.btn_ok);
-                        }
-                    });
+                    Crouton.makeText(GameActivity.this,message,Style.ALERT);
                 }
 
             }
@@ -321,31 +338,35 @@ public class GameActivity extends Activity implements OnItemClickListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (listener != null) {
-            phHueSDK.getNotificationManager().unregisterSDKListener(listener);
+        if (mode == MODE_HOST) {
+            if (listener != null) {
+                phHueSDK.getNotificationManager().unregisterSDKListener(listener);
+            }
+            phHueSDK.disableAllHeartbeat();
         }
-        phHueSDK.disableAllHeartbeat();
         Crouton.cancelAllCroutons();
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        HueSharedPreferences prefs = HueSharedPreferences.getInstance(getApplicationContext());
-        PHAccessPoint accessPoint = (PHAccessPoint) adapter.getItem(position);
-        accessPoint.setUsername(prefs.getUsername());
+        if (mode == MODE_HOST) {
+            HueSharedPreferences prefs = HueSharedPreferences.getInstance(getApplicationContext());
+            PHAccessPoint accessPoint = (PHAccessPoint) adapter.getItem(position);
+            accessPoint.setUsername(prefs.getUsername());
 
-        PHBridge connectedBridge = phHueSDK.getSelectedBridge();
+            PHBridge connectedBridge = phHueSDK.getSelectedBridge();
 
-        if (connectedBridge != null) {
-            String connectedIP = connectedBridge.getResourceCache().getBridgeConfiguration().getIpAddress();
-            if (connectedIP != null) { // We are already connected here:-
-                phHueSDK.disableHeartbeat(connectedBridge);
-                phHueSDK.disconnect(connectedBridge);
+            if (connectedBridge != null) {
+                String connectedIP = connectedBridge.getResourceCache().getBridgeConfiguration().getIpAddress();
+                if (connectedIP != null) { // We are already connected here:-
+                    phHueSDK.disableHeartbeat(connectedBridge);
+                    phHueSDK.disconnect(connectedBridge);
+                }
             }
+            PHWizardAlertDialog.getInstance().showProgressDialog(R.string.connecting, GameActivity.this);
+            phHueSDK.connect(accessPoint);
         }
-        PHWizardAlertDialog.getInstance().showProgressDialog(R.string.connecting, GameActivity.this);
-        phHueSDK.connect(accessPoint);
     }
 
     public void doBridgeSearch() {
@@ -399,4 +420,17 @@ public class GameActivity extends Activity implements OnItemClickListener {
         invalidateOptionsMenu();
     }
 
+    @Override
+    public void success(Game game, Response response) {
+        if (game != null) {
+            Log.d("GAME","ready");
+            this.gameView.setBackgroundColor(Color.parseColor(game.getTargetColor()));
+        }
+    }
+
+    @Override
+    public void failure(RetrofitError error) {
+        Crouton.makeText(this, "there was a problem loading the game, please try again", Style.ALERT);
+        finish();
+    }
 }
