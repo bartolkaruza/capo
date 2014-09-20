@@ -17,13 +17,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.larswerkman.holocolorpicker.ColorPicker;
-import com.larswerkman.holocolorpicker.OpacityBar;
-import com.larswerkman.holocolorpicker.SVBar;
 import com.philips.lighting.hue.sdk.PHHueSDK;
 import com.philips.lighting.hue.sdk.utilities.PHUtilities;
 import com.philips.lighting.model.PHBridge;
@@ -32,10 +29,11 @@ import com.philips.lighting.model.PHLightState;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import io.blueapps.lightspace.bleutooth.MyBluetoothDevice;
 
-public class ColorActivity extends Activity implements ColorPicker.OnColorChangedListener {
+public class ColorActivity extends Activity implements ColorPicker.OnColorSelectedListener {
 
     private PHHueSDK phHueSDK;
 
@@ -48,10 +46,11 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorChange
     // Stops scanning after 10 seconds.
     private static final long SCAN_PERIOD = 100000;
     private ColorPicker picker;
-    private SVBar svBar;
-    private OpacityBar opacityBar;
-    private Button button;
-    private TextView text;
+
+    // private SVBar svBar;
+    // private OpacityBar opacityBar;
+    // private Button button;
+    // private TextView text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,23 +59,23 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorChange
         phHueSDK = PHHueSDK.create();
 
         picker = (ColorPicker) findViewById(R.id.picker);
-        svBar = (SVBar) findViewById(R.id.svbar);
-        opacityBar = (OpacityBar) findViewById(R.id.opacitybar);
-        button = (Button) findViewById(R.id.button1);
-        text = (TextView) findViewById(R.id.textView1);
+        // svBar = (SVBar) findViewById(R.id.svbar);
+        // opacityBar = (OpacityBar) findViewById(R.id.opacitybar);
+        // picker.addSVBar(svBar);
+        // picker.addOpacityBar(opacityBar);
+        // button = (Button) findViewById(R.id.button1);
+        // text = (TextView) findViewById(R.id.textView1);
+        //
+        // button.setOnClickListener(new View.OnClickListener() {
+        //
+        // @Override
+        // public void onClick(View v) {
+        // text.setTextColor(picker.getColor());
+        // picker.setOldCenterColor(picker.getColor());
+        // }
+        // });
 
-        picker.addSVBar(svBar);
-        picker.addOpacityBar(opacityBar);
-        picker.setOnColorChangedListener(this);
-
-        button.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                text.setTextColor(picker.getColor());
-                picker.setOldCenterColor(picker.getColor());
-            }
-        });
+        picker.setOnColorSelectedListener(this);
 
         mHandler = new Handler();
 
@@ -100,12 +99,8 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorChange
         }
     }
 
-    @Override
-    public void onColorChanged(int color) {
-
-        float[] floats = PHUtilities.calculateXY(color, "");
-
-        // gives the color when it's changed.
+    public void onColorSelected(int color) {
+        setHueColor(color);
     }
 
     @Override
@@ -173,21 +168,6 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorChange
         mLeDeviceListAdapter.clear();
     }
 
-    // @Override
-    // protected void onListItemClick(ListView l, View v, int position, long id) {
-    // final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position).getDevice();
-    // if (device == null)
-    // return;
-    // final Intent intent = new Intent(this, DeviceControlActivity.class);
-    // intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.getName());
-    // intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
-    // if (mScanning) {
-    // mBluetoothAdapter.stopLeScan(mLeScanCallback);
-    // mScanning = false;
-    // }
-    // startActivity(intent);
-    // }
-
     private void scanLeDevice(final boolean enable) {
         if (enable) {
             // Stops scanning after a pre-defined scan period.
@@ -221,9 +201,10 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorChange
             mInflator = ColorActivity.this.getLayoutInflater();
         }
 
-        public void addDevice(MyBluetoothDevice device) {
+        public boolean addDevice(MyBluetoothDevice device) {
             if (!mLeDevices.contains(device)) {
                 mLeDevices.add(device);
+                return Boolean.TRUE;
             }
             else {
                 for (MyBluetoothDevice dev : mLeDevices) {
@@ -232,6 +213,8 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorChange
                     }
                 }
             }
+
+            return Boolean.FALSE;
         }
 
         public MyBluetoothDevice getDevice(int position) {
@@ -297,19 +280,20 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorChange
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mLeDeviceListAdapter.addDevice(new MyBluetoothDevice(device, rssi));
-                    // mLeDeviceListAdapter.notifyDataSetChanged();
-                    boolean isPlayer = true;
+                    boolean deviceAdded = mLeDeviceListAdapter.addDevice(new MyBluetoothDevice(device, rssi));
 
-                    if (isPlayer) {
-                        int color = Color.argb(255, 255 - rssi, 255 - rssi, 255 - rssi);
-                        Log.d("colorpicker", "set color: " + color);
+                    if (deviceAdded) {
+                        Random rand = new Random();
+
+                        int i = 255 + rssi;
+                        int red = i - rand.nextInt(i);
+                        int green = i - rand.nextInt(i);
+                        int blue = i - rand.nextInt(i);
+
+                        int color = -Color.argb(255, red, green, blue);
+
                         picker.setColor(color);
-                        picker.setNewCenterColor(color);
                         picker.setShowOldCenterColor(false);
-                        picker.changeValueBarColor(color);
-                        picker.changeOpacityBarColor(color);
-                        picker.changeSaturationBarColor(color);
 
                         setHueColor(color);
                     }
@@ -324,25 +308,41 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorChange
     }
 
     public void setHueColor(int color) {
-        PHBridge bridge = phHueSDK.getSelectedBridge();
-        if (bridge != null) {
-            List<PHLight> allLights = bridge.getResourceCache().getAllLights();
+        int r = (color >> 16) & 0xFF;
+        int g = (color >> 8) & 0xFF;
+        int b = (color >> 0) & 0xFF;
+        Log.d("colorpicker", "color= " + color);
+        setHueColor(r, g, b);
+    }
 
-            for (PHLight light : allLights) {
-                float xy[] = PHUtilities.calculateXY(color, "");
-                PHLightState lightState = new PHLightState();
-                lightState.setX(xy[0]);
-                lightState.setY(xy[1]);
+    public void setHueColor(int r, int g, int b) {
+        Log.d("colorpicker", "r=" + r + " g=" + g + " b= " + b);
 
-                // lightState.setHue(rand.nextInt(MAX_HUE));
-                // To validate your lightstate is valid (before sending to the bridge) you can use:
-                // String validState = lightState.validateState();
-                // bridge.updateLightState(light, lightState, listener);
-                bridge.updateLightState(light, lightState); // If no bridge response is required then use this simpler form.
-            }
+        if (r == 0 && g == 0 && b == 0) {
+            Log.d("colorpicker", "bulb can not display black");
         }
         else {
-            Toast.makeText(this, "No Philips HUE bridge connected", Toast.LENGTH_SHORT).show();
+            PHBridge bridge = phHueSDK.getSelectedBridge();
+
+            if (bridge != null) {
+                List<PHLight> allLights = bridge.getResourceCache().getAllLights();
+
+                for (PHLight light : allLights) {
+                    float xy[] = PHUtilities.calculateXYFromRGB(r, g, b, light.getModelNumber());
+                    PHLightState lightState = new PHLightState();
+                    lightState.setX(xy[0]);
+                    lightState.setY(xy[1]);
+                    lightState.setAlertMode(PHLight.PHLightAlertMode.ALERT_SELECT);
+                    lightState.setColorMode(PHLight.PHLightColorMode.COLORMODE_XY);
+                    lightState.setBrightness(50);
+
+                    // lightState.setHue(rand.nextInt(MAX_HUE));
+                    // To validate your lightstate is valid (before sending to the bridge) you can use:
+                    // String validState = lightState.validateState();
+                    // bridge.updateLightState(light, lightState, listener);
+                    bridge.updateLightState(light, lightState); // If no bridge response is required then use this simpler form.
+                }
+            }
         }
     }
 

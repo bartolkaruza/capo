@@ -1,11 +1,16 @@
 package com.http;
 
 
+import com.http.data.CreateGame;
+import com.http.data.DeviceAddress;
+import com.http.data.Game;
+
+import java.util.List;
+
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
-import retrofit.http.Part;
 import retrofit.http.Path;
 
 /**
@@ -14,19 +19,17 @@ import retrofit.http.Path;
  */
 public interface GameRESTful {
 
-    @PUT("/game/create")
-    String createGame(@Part("name") String name, @Part("deviceAddress") String deviceAddress);
+    public static String END_POINT = "http://bartolkaruza-measure-app.nodejitsu.com/";
+
+    @PUT("/game")
+    Game createGame(@Body CreateGame gameRequest);
 
     @GET("/game")
-    String getGameId();
+    List<Game> getGames();
 
     @GET("/game/{gameId}")
-    Game getGame(@Path("gameId") long gameId);
+    Game getGame(@Path("gameId") String gameId);
 
-    @PUT("game/{gameId}/join")
-    String joinGame(@Path("gameId") String gameId, @Part(("deviceAddress")) String deviceAddress);
-
-    @POST("game/{gameId}/update")
-    GameUpdateResponse getUpdate(@Path("gameId") String gameId, @Body GameUpdateRequest gameUpdate);
-
+    @POST("/game/{gameId}/join")
+    Game joinGame(@Path("gameId") String gameId, @Body DeviceAddress deviceAddress);
 }

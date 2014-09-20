@@ -28,7 +28,6 @@
     <string name="txt_select_smartbridge">Please select a bridge to use for this app</string>
     <string name="title_error">Error</string>
     <string name="txt_last_heartbeat">Last Heartbeat : </string>
-
     <string name="ble_not_supported">BLE is not supported</string>
     <string name="label_data">Data:</string>
     <string name="label_device_address">Device address:</string>
@@ -38,7 +37,6 @@
     <string name="disconnected">Disconnected</string>
     <string name="title_devices">BLE Device Scan</string>
     <string name="error_bluetooth_not_supported">Bluetooth not supported.</string>
-
     <string name="unknown_device">Unknown device</string>
     <string name="unknown_characteristic">Unknown characteristic</string>
     <string name="unknown_service">Unknown service</string>
@@ -48,4 +46,8 @@
     <string name="menu_disconnect">Disconnect</string>
     <string name="menu_scan">Scan</string>
     <string name="menu_stop">Stop</string>
+    <string name="title_activity_capo_splash">CapoSplashActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_capo_choose_game">CapoChooseGameActivity</string>
+
 </resources>
