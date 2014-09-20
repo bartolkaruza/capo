@@ -64,14 +64,14 @@ public class MeasurementSender {
 
             @Override
             public void onConnect() {
-                updateMeasurement(new ArrayList<Pair<String, Integer>>());
+                updateMeasurement(new ArrayList<MeasurementPair>());
                 Log.d("onConnect", "Connection established");
             }
 
         });
     }
 
-    public void updateMeasurement(List<Pair<String, Integer>> measurements) {
+    public void updateMeasurement(List<MeasurementPair> measurements) {
         String time = DateFormat.getDateTimeInstance().format(new Date(System.currentTimeMillis()));
         if(socket != null) {
             Log.d("sender", "sending measurement with: " + time);
