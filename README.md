@@ -15,7 +15,7 @@ philipshue303
 
 [api server](http://bartolkaruza-measure-app.nodejitsu.com/game)
 
-PUT game/create
+PUT game
 ```
 {
     "name": "game01",
