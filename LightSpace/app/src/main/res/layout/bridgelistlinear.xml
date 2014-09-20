@@ -7,7 +7,7 @@
     android:paddingRight="10dp"
     android:background="@android:color/white"
     android:theme="@android:style/Theme.Dialog"
-    android:id="@+id/linear1"
+    android:id="@+id/gameView"
     android:minWidth="300dp" >
 
     <ListView

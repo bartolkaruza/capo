@@ -128,6 +128,8 @@ public class CapoSplashActivity extends Activity {
             public void success(Game game, Response response) {
                 Intent inte = new Intent(CapoSplashActivity.this, GameActivity.class);
                 inte.putExtra(GameActivity.KEY_MODE, GameActivity.MODE_HOST);
+                inte.putExtra(GameActivity.KEY_ADRESS, address.getDeviceAddress());
+                inte.putExtra(GameActivity.KEY_GAME_ID, game.getName());
                 startActivity(inte);
             }
 
@@ -136,7 +138,6 @@ public class CapoSplashActivity extends Activity {
 
             }
         });
-
     }
 
     @OnClick(R.id.joingame_button)
@@ -146,6 +147,8 @@ public class CapoSplashActivity extends Activity {
             public void success(Game game, Response response) {
                 Intent inte = new Intent(CapoSplashActivity.this, GameActivity.class);
                 inte.putExtra(GameActivity.KEY_MODE, GameActivity.MODE_JOIN);
+                inte.putExtra(GameActivity.KEY_ADRESS, address.getDeviceAddress());
+                inte.putExtra(GameActivity.KEY_GAME_ID, game.getName());
                 startActivity(inte);
             }
 
