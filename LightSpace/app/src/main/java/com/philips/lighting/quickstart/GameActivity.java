@@ -412,7 +412,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
                     }
 
                     for (GameValues gv : values) {
-                        if (deviceAddress.equalsIgnoreCase(gv.getAddress()) {
+                        if (deviceAddress.equalsIgnoreCase(gv.getAddress())) {
                             pairs.add(pair);
                             rssiSender.updateMeasurement(pairs);
                         }
