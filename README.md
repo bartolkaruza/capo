@@ -29,7 +29,7 @@ POST/PUT game/game01/join
 }
 ```
 
-game/game01/update
+game/game01/02-BB-02-BB/update
 
 Request:
 ```
