@@ -129,6 +129,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
     private boolean initBLE() {
 
         adapter = new AccessPointListAdapter(getApplicationContext(),new ArrayList<PHAccessPoint>());
+        bridgeList.setOnItemClickListener(this);
         bridgeList.setAdapter(adapter);
 
         Log.d("API", "initBLE");
@@ -249,7 +250,6 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
             prefs.setLastConnectedIPAddress(b.getResourceCache().getBridgeConfiguration().getIpAddress());
             prefs.setUsername(prefs.getUsername());
             PHWizardAlertDialog.getInstance().closeProgressDialog();
-
         }
 
         @Override
@@ -394,7 +394,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
                     MeasurementPair pair = new MeasurementPair();
                     if (bluetoothDevice != null && bluetoothDevice.getDevice() != null) {
                         pair.setDeviceAddress(bluetoothDevice.getDevice().getAddress());
-                        pair.setDeviceAddress(bluetoothDevice.getRssi() + "");
+                        pair.setRssi(bluetoothDevice.getRssi());
                     }
                     pairs.add(pair);
                     rssiSender.updateMeasurement(pairs);

@@ -6,7 +6,7 @@ package io.blueapps.lightspace.socket;
 public class MeasurementPair {
 
     private String deviceAddress;
-    private String rssi;
+    private int rssi;
 
     public String getDeviceAddress() {
         return deviceAddress;
@@ -16,11 +16,11 @@ public class MeasurementPair {
         this.deviceAddress = deviceAddress;
     }
 
-    public String getRssi() {
+    public int getRssi() {
         return rssi;
     }
 
-    public void setRssi(String rssi) {
+    public void setRssi(int rssi) {
         this.rssi = rssi;
     }
 }

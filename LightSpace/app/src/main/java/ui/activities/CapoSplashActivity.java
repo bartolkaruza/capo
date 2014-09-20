@@ -26,6 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import io.blueapps.lightspace.BuildConfig;
+import io.blueapps.lightspace.ColorActivity;
 import io.blueapps.lightspace.R;
 import io.blueapps.lightspace.bleutooth.DeviceScanActivity;
 import retrofit.Callback;
@@ -44,6 +45,9 @@ public class CapoSplashActivity extends Activity {
 
     @InjectView(R.id.device_button)
     View deviceButton;
+
+    @InjectView(R.id.device_color)
+    View colorButton;
 
     // TODO fix deviceAddress
     public static DeviceAddress address;
@@ -71,9 +75,11 @@ public class CapoSplashActivity extends Activity {
 
         if (BuildConfig.DEBUG) {
             deviceButton.setVisibility(View.VISIBLE);
+            colorButton.setVisibility(View.VISIBLE);
         }
         else {
             deviceButton.setVisibility(View.GONE);
+            colorButton.setVisibility(View.GONE);
         }
 
         doSomeInitialComputation();
@@ -172,6 +178,12 @@ public class CapoSplashActivity extends Activity {
     @OnClick(R.id.device_button)
     public void onDeviceButtonClick(View v) {
         Intent inte = new Intent(this, DeviceScanActivity.class);
+        startActivity(inte);
+    }
+
+    @OnClick(R.id.device_color)
+    public void onDeviceColorButtonClick(View v) {
+        Intent inte = new Intent(this, ColorActivity.class);
         startActivity(inte);
     }
 
