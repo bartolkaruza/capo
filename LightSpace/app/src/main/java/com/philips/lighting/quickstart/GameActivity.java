@@ -430,6 +430,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
 
     @Override
     public void failure(RetrofitError error) {
-
+        Crouton.makeText(this, "there was a problem loading the game, please try again", Style.ALERT);
+        finish();
     }
 }
