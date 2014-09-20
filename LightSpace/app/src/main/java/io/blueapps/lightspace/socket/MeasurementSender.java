@@ -3,6 +3,7 @@ package io.blueapps.lightspace.socket;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.http.GameRESTful;
 
 import org.json.JSONObject;
 
@@ -33,7 +34,7 @@ public class MeasurementSender {
         try {
             // socket = new SocketIO("http://192.168.1.88:3000/");
             // socket = new SocketIO("http://bartolkaruza-measure-app.nodejitsu.com/");
-            socket = new SocketIO("http://10.12.1.74:3000");
+            socket = new SocketIO(GameRESTful.END_POINT);
         }
         catch (MalformedURLException e) {
             e.printStackTrace();
