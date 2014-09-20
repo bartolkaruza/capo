@@ -22,8 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.larswerkman.holocolorpicker.ColorPicker;
-import com.larswerkman.holocolorpicker.OpacityBar;
-import com.larswerkman.holocolorpicker.SVBar;
 import com.philips.lighting.hue.sdk.PHHueSDK;
 import com.philips.lighting.hue.sdk.utilities.PHUtilities;
 import com.philips.lighting.model.PHBridge;
@@ -49,8 +47,8 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorSelect
     // Stops scanning after 10 seconds.
     private static final long SCAN_PERIOD = 100000;
     private ColorPicker picker;
-    private SVBar svBar;
-    private OpacityBar opacityBar;
+    // private SVBar svBar;
+    // private OpacityBar opacityBar;
     private Button button;
     private TextView text;
 
@@ -61,13 +59,13 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorSelect
         phHueSDK = PHHueSDK.create();
 
         picker = (ColorPicker) findViewById(R.id.picker);
-        svBar = (SVBar) findViewById(R.id.svbar);
-        opacityBar = (OpacityBar) findViewById(R.id.opacitybar);
+        // svBar = (SVBar) findViewById(R.id.svbar);
+        // opacityBar = (OpacityBar) findViewById(R.id.opacitybar);
+        // picker.addSVBar(svBar);
+        // picker.addOpacityBar(opacityBar);
         button = (Button) findViewById(R.id.button1);
         text = (TextView) findViewById(R.id.textView1);
 
-        picker.addSVBar(svBar);
-        picker.addOpacityBar(opacityBar);
         picker.setOnColorSelectedListener(this);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -317,9 +315,8 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorSelect
                         picker.setNewCenterColor(color);
 
                         picker.setShowOldCenterColor(false);
-//                        picker.changeOpacityBarColor(0);
-                        picker.changeSaturationBarColor(255);
-//                        picker.setNewCenterColor();
+                        // picker.changeOpacityBarColor(0);
+                        // picker.changeSaturationBarColor(255);
 
                         setHueColor(red, green, blue);
                     }
