@@ -51,5 +51,5 @@ module.exports = function(app, options) {
         });
     });
 //  app.put('/measurements', options.measurement);
-    
+
 };
