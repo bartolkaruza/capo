@@ -15,7 +15,9 @@ import com.philips.lighting.quickstart.PHHomeActivity;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import io.blueapps.lightspace.BuildConfig;
 import io.blueapps.lightspace.R;
+import io.blueapps.lightspace.bleutooth.DeviceScanActivity;
 
 public class CapoSplashActivity extends Activity {
 
@@ -27,6 +29,9 @@ public class CapoSplashActivity extends Activity {
     View buttonHolder;
 
     View content;
+
+    @InjectView(R.id.device_button)
+    View deviceButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,17 @@ public class CapoSplashActivity extends Activity {
                 return true;
             }
         });
+
+        if (BuildConfig.DEBUG)
+        {
+            deviceButton.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            deviceButton.setVisibility(View.GONE);
+        }
+
+
         doSomeInitialComputation();
     }
 
@@ -117,6 +133,13 @@ public class CapoSplashActivity extends Activity {
     {
         Intent inte = new Intent(this, PHHomeActivity.class);
         inte.putExtra(PHHomeActivity.KEY_MODE, PHHomeActivity.MODE_JOIN);
+        startActivity(inte);
+    }
+
+    @OnClick(R.id.device_button)
+    public void onDeviceButtonClick(View v)
+    {
+        Intent inte = new Intent(this, DeviceScanActivity.class);
         startActivity(inte);
     }
 }
