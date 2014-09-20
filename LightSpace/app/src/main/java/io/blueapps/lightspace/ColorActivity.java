@@ -305,8 +305,7 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorSelect
                         int blue = i - rand.nextInt(i);
 
                         int color = -Color.argb(0, red, green, blue);
-                        Log.d("color changes", "set color: " + color);
-                        Log.d("color changes", "color= " + color + ", r=" + red + " g=" + green + " b= " + blue);
+
                         picker.setColor(color);
                         picker.setShowOldCenterColor(false);
 
@@ -326,13 +325,17 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorSelect
         int r = (color >> 16) & 0xFF;
         int g = (color >> 8) & 0xFF;
         int b = (color >> 0) & 0xFF;
-
-        Log.d("colorpicker", "color= " + color + ", r=" + r + " g=" + g + " b= " + b);
+        Log.d("colorpicker", "color= " + color);
         setHueColor(r, g, b);
     }
 
     public void setHueColor(int r, int g, int b) {
-        if (r != 0 && g != 0 && b != 0) {
+        Log.d("colorpicker", "r=" + r + " g=" + g + " b= " + b);
+
+        if (r == 0 && g == 0 && b == 0) {
+            Log.d("colorpicker", "bulb can not display black");
+        }
+        else {
             PHBridge bridge = phHueSDK.getSelectedBridge();
 
             if (bridge != null) {
@@ -351,9 +354,6 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorSelect
                     bridge.updateLightState(light, lightState); // If no bridge response is required then use this simpler form.
                 }
             }
-        }
-        else {
-            Log.d("color changes", "bulb can not display black");
         }
     }
 
