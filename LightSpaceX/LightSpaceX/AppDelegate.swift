@@ -193,6 +193,66 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CBCentralManagerDelegate,
     func notAuthenticated() {
         println("notAuthenticated")
     }
+    
+    // MARK: - RestKit
+    
+    func configureRestKit() {
+        // initialize AFNetworking HTTPClient
+        let baseURL = NSURL.URLWithString("http://bartolkaruza-measure-app.nodejitsu.com")
+        let client = AFHTTPClient(baseURL: baseURL)
+        
+        // initialize RestKit
+        let objectManager = RKObjectManager(HTTPClient: client)
+        
+        // setup object mappings
+//        let venueMapping = RKObjectMapping(forClass: Game.self)
+//        venueMapping.addAttributeMappingsFromArray(["YOUDIE", "HELL"])
+        
+        // register mappings with the provider using a response descriptor
+//        let responseDescriptor = RKResponseDescriptor(mapping: venueMapping, method: RKRequestMethod.GET, pathPattern: "/game", keyPath: "response.venues", statusCodes: NSIndexSet(index: 200))
+        
+//        objectManager.addResponseDescriptor(responseDescriptor)
+        
+        let game = Game()
+        game.name = "YOUDIE"
+        game.deviceAddress = "HELL"
+        
+        RKObjectManager.sharedManager().putObject(game, path: "/game", parameters: nil,
+            success:{ operation, mappingResult in
+//            self.venues = mappingResult.array()
+//            self.tableView.reloadData()
+                println("\(operation)")
+                println("\(mappingResult)")
+            },
+            failure:{ operation, error in
+                println("\(operation)")
+                println("\(error)")
+//                NSLog("What do you mean by 'there is no coffee?': \(error!.localizedDescription)")
+        })
+    }
+
+    /*
+    func loadVenues() {
+        let latLon = "37.33,-122.03" // approximate latLon of The Mothership (a.k.a Apple headquarters)
+        let queryParams = [
+            "ll": latLon,
+            "client_id": kCLIENTID,
+            "client_secret": kCLIENTSECRET,
+            "categoryId": "4bf58dd8d48988d1e0931735",
+            "v" : "20140617"
+        ]
+        
+        RKObjectManager.sharedManager().getObjectsAtPath("/v2/venues/search", parameters: queryParams,
+            success:{ operation, mappingResult in
+                self.venues = mappingResult.array()
+                self.tableView.reloadData()
+            },
+            failure:{ operation, error in
+                NSLog("What do you mean by 'there is no coffee?': \(error!.localizedDescription)")
+            }
+        )
+    }
+*/
 
     // MARK: - lifecycle
     
@@ -201,8 +261,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CBCentralManagerDelegate,
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
+        // RK
+        self.configureRestKit()
+        
         // SIO
-        SIOSocket.socketWithHost("http://bartolkaruza-measure-app.nodejitsu.com/game", response: { socket in
+        SIOSocket.socketWithHost("http://bartolkaruza-measure-app.nodejitsu.com", response: { socket in
             self.socket = socket
 //            self.socket?.on(<#event: String!#>, callback: <#((AnyObject!) -> Void)!##(AnyObject!) -> Void#>)
             self.socket?.emit1("{ \"game\" : \"YOUDIE\", \"deviceAddress\" : \"HELL\" }")

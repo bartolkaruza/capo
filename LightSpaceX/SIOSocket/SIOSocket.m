@@ -134,6 +134,11 @@
 }
 
 // Emitters
+- (void)emit1:(NSString *)event
+{
+    [self emit:event, nil];
+}
+
 - (void)emit:(NSString *)event, ...
 {
     NSMutableArray *arguments = [NSMutableArray array];

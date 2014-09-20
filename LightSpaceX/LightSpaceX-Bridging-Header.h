@@ -10,6 +10,7 @@
 #define LightSpaceX_LightSpaceX_Bridging_Header_h
 
 #import <HueSDK_iOS/HueSDK.h>
+#import <RestKit/RestKit.h>
 
 #import "PHBridgePushLinkViewController.h"
 #import "PHBridgeSelectionViewController.h"
