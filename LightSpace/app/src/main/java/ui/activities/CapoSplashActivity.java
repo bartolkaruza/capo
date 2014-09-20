@@ -16,7 +16,9 @@ import com.philips.lighting.quickstart.PHHomeActivity;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import io.blueapps.lightspace.BuildConfig;
 import io.blueapps.lightspace.R;
+import io.blueapps.lightspace.bleutooth.DeviceScanActivity;
 
 public class CapoSplashActivity extends Activity {
 
@@ -27,6 +29,9 @@ public class CapoSplashActivity extends Activity {
     View buttonHolder;
 
     View content;
+
+    @InjectView(R.id.device_button)
+    View deviceButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +50,16 @@ public class CapoSplashActivity extends Activity {
                 return true;
             }
         });
-        SocketIO socketIO = new SocketIO();
+
+        if (BuildConfig.DEBUG)
+        {
+            deviceButton.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            deviceButton.setVisibility(View.GONE);
+        }
+
         doSomeInitialComputation();
     }
 
@@ -99,16 +113,28 @@ public class CapoSplashActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    @OnClick(R.id.startgame_button)
-    public void onStartGameClick(View v) {
-        Intent inte = new Intent(this, PHHomeActivity.class);
-        startActivity(inte);
+     @OnClick(R.id.startgame_button)
+      public void onStartGameClick(View v)
+     {
+         Intent inte = new Intent(this, PHHomeActivity.class);
+         inte.putExtra(PHHomeActivity.KEY_MODE, PHHomeActivity.MODE_HOST);
+         startActivity(inte);
 
     }
 
     @OnClick(R.id.joingame_button)
-    public void onJoinGameClick(View v) {
+    public void onJoinGameClick(View v)
+    {
+        Intent inte = new Intent(this, PHHomeActivity.class);
+        inte.putExtra(PHHomeActivity.KEY_MODE, PHHomeActivity.MODE_JOIN);
+        startActivity(inte);
+    }
 
+    @OnClick(R.id.device_button)
+    public void onDeviceButtonClick(View v)
+    {
+        Intent inte = new Intent(this, DeviceScanActivity.class);
+        startActivity(inte);
     }
 }
+
