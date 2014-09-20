@@ -11,9 +11,15 @@ import CoreBluetooth
 import CoreMotion
 
 let NOTIFY_MTU = 20
+let MOTION_SERVICE_UUID = "D639895B-60A2-486E-8C80-0BF2585FF6AD"
+let MOTION_CHARACTERISTIC_UUID = "64C7D7C2-CFF2-471A-BC3C-8EBF119747FB"
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, CBCentralManagerDelegate { //, CBPeripheralManagerDelegate { //, PHBridgeSelectionViewControllerDelegate, PHBridgePushLinkViewControllerDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, CBCentralManagerDelegate, CBPeripheralManagerDelegate { //, PHBridgeSelectionViewControllerDelegate, PHBridgePushLinkViewControllerDelegate {
+    
+    // MARK: - SIOSocket
+    
+    var socket: SIOSocket?
     
     // MARK: - CoreBluetooth & CoreMotion
     
@@ -32,15 +38,44 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CBCentralManagerDelegate 
     
     func centralManager(central: CBCentralManager!, didDiscoverPeripheral peripheral: CBPeripheral!, advertisementData: [NSObject : AnyObject]!, RSSI: NSNumber!) {
 //        let localName = advertisementData[kCBAdvDataLocalName]
-//        println("rssi: \(RSSI) advertisementData: \(advertisementData)")
+        println()
         println("rssi: \(RSSI) name: \(peripheral.name)")
+        println("advertisementData: \(advertisementData)")
     }
     
     /** Required protocol method.  A full app should take care of all the possible states,
     *  but we're just waiting for  to know when the CBPeripheralManager is ready
     */
     func peripheralManagerDidUpdateState(peripheral: CBPeripheralManager!) {
+        /*
+        CBPeripheralManagerStateUnknown  = 0,
+        CBPeripheralManagerStateResetting ,
+        CBPeripheralManagerStateUnsupported ,
+        CBPeripheralManagerStateUnauthorized ,
+        CBPeripheralManagerStatePoweredOff ,
+        CBPeripheralManagerStatePoweredOn ,
+        */
+        switch (peripheral.state) {
+        case .Unknown:
+            println("unk")
+        case .Resetting:
+            println("res")
+        case .Unsupported:
+            println("uns")
+//        case.Unauthorized:
+//            println("una")
+        case .PoweredOff:
+            println("off")
+        case .PoweredOn:
+            println("on")
+        default:
+            println("def")
+        }
         if (peripheral.state == .PoweredOn) {
+            let cbUUID: CBUUID = CBUUID.UUIDWithString(MOTION_SERVICE_UUID)
+            let advertisementData = [ CBAdvertisementDataServiceUUIDsKey : cbUUID, CBAdvertisementDataLocalNameKey : "CAPOAPI" ]
+            peripheral.startAdvertising(advertisementData)
+            
 //            self.motionCharacteristic = CBMutableCharacteristic(
                 /*
                 [[CBMutableCharacteristic alloc] initWithType:[CBUUID UUIDWithString:MOTION_CHARACTERISTIC_UUID]
@@ -144,13 +179,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CBCentralManagerDelegate 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
+        // SIO
+        SIOSocket.socketWithHost("http://bartolkaruza-measure-app.nodejitsu.com/game", response: { socket in
+            self.socket = socket
+        })
+        
         // CM
         self.motionManager = CMMotionManager()
         self.motionManager?.deviceMotionUpdateInterval = 0.1
         
         // CB
         self.centralManager = CBCentralManager(delegate: self, queue: nil)
-//        self.peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
+        self.peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
         
         // Hue
         self.phHueSDK = PHHueSDK()
