@@ -1,2 +1,2 @@
-platform :ios, '8.0'
-pod 'SIOSocket'
+platform :ios, '8.0' 
+pod 'RestKit'

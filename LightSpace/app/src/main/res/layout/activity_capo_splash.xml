@@ -40,6 +40,20 @@
             android:text="Join Game"
             android:id="@+id/joingame_button"
             style="@style/menu_button"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="List Devices"
+            android:id="@+id/device_button"
+            style="@style/menu_button"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Color Tester"
+            android:id="@+id/device_color"
+            style="@style/menu_button"/>
     </LinearLayout>
 
 </FrameLayout>

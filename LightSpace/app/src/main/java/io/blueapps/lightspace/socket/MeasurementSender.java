@@ -1,10 +1,9 @@
 package io.blueapps.lightspace.socket;
 
 import android.util.Log;
-import android.util.Pair;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
+import com.http.GameRESTful;
 
 import org.json.JSONObject;
 
@@ -14,11 +13,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import io.blueapps.lightspace.bleutooth.BluetoothLeService;
 import io.socket.IOAcknowledge;
 import io.socket.IOCallback;
 import io.socket.SocketIO;
 import io.socket.SocketIOException;
+import ui.activities.CapoSplashActivity;
 
 /**
  * Created by bartolkaruza on 20/05/14.
@@ -29,11 +28,15 @@ public class MeasurementSender {
 
     public MeasurementSender() {
         socket = null;
+    }
+
+    public void init() {
         try {
-//            socket = new SocketIO("http://192.168.1.88:3000/");
-//            socket = new SocketIO("http://bartolkaruza-measure-app.nodejitsu.com/");
-            socket = new SocketIO("http://10.12.1.74:3000");
-        } catch (MalformedURLException e) {
+            // socket = new SocketIO("http://192.168.1.88:3000/");
+            // socket = new SocketIO("http://bartolkaruza-measure-app.nodejitsu.com/");
+            socket = new SocketIO(GameRESTful.END_POINT);
+        }
+        catch (MalformedURLException e) {
             e.printStackTrace();
         }
         socket.connect(new IOCallback() {
@@ -71,12 +74,16 @@ public class MeasurementSender {
         });
     }
 
+    public void stop() {
+        socket.disconnect();
+    }
+
     public void updateMeasurement(List<MeasurementPair> measurements) {
         String time = DateFormat.getDateTimeInstance().format(new Date(System.currentTimeMillis()));
-        if(socket != null) {
+        if (socket != null) {
             Log.d("sender", "sending measurement with: " + time);
             Gson gson = new Gson();
-            socket.emit("measurement", gson.toJson(new MeasureEvent(BluetoothLeService.MY_UUID, measurements)));
+            socket.emit("measurement", gson.toJson(new MeasureEvent(CapoSplashActivity.address.getDeviceAddress(), measurements)));
         }
     }
 }

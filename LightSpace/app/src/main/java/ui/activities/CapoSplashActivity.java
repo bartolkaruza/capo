@@ -1,39 +1,65 @@
 package ui.activities;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.ParcelUuid;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.TextView;
+
+import com.http.GameRESTfulService;
+import com.http.data.DeviceAddress;
+import com.http.data.Game;
+import com.philips.lighting.quickstart.GameActivity;
+
+import java.lang.reflect.Method;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import io.blueapps.lightspace.BuildConfig;
 import io.blueapps.lightspace.ColorActivity;
-import io.blueapps.lightspace.LightSpaceActivity;
 import io.blueapps.lightspace.R;
+import io.blueapps.lightspace.bleutooth.DeviceScanActivity;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class CapoSplashActivity extends Activity {
 
     @InjectView(R.id.splashscreen_logo)
     View logo;
 
-
     @InjectView(R.id.menu_button_holder)
     View buttonHolder;
 
     View content;
 
+    @InjectView(R.id.device_button)
+    View deviceButton;
+
+    @InjectView(R.id.device_color)
+    View colorButton;
+
+    // TODO fix deviceAddress
+    public static DeviceAddress address;
+    GameRESTfulService gameService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capo_splash);
+        setUpDeviceAddress();
 
+        gameService = GameRESTfulService.getInstance(address);
         content = findViewById(android.R.id.content);
 
         ButterKnife.inject(this);
@@ -46,32 +72,39 @@ public class CapoSplashActivity extends Activity {
                 return true;
             }
         });
+
+        if (BuildConfig.DEBUG) {
+            deviceButton.setVisibility(View.VISIBLE);
+            colorButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            deviceButton.setVisibility(View.GONE);
+            colorButton.setVisibility(View.GONE);
+        }
+
         doSomeInitialComputation();
     }
 
-    private void doSomeInitialComputation()
-    {
+    private void doSomeInitialComputation() {
 
         new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                switch (msg.what)
-                {
+                switch (msg.what) {
                     case 0:
-                        sendEmptyMessageDelayed(1,1000);
+                        sendEmptyMessageDelayed(1, 1000);
                         break;
                     case 1:
                         gameReady();
                         break;
                 }
             }
-        }.sendEmptyMessageDelayed(0,1000);
+        }.sendEmptyMessageDelayed(0, 1000);
     }
 
-    public void gameReady()
-    {
-        logo.animate().y(-logo.getHeight()/8);
+    public void gameReady() {
+        logo.animate().y(-logo.getHeight() / 8);
         buttonHolder.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
@@ -83,7 +116,6 @@ public class CapoSplashActivity extends Activity {
             }
         });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -104,17 +136,70 @@ public class CapoSplashActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-     @OnClick(R.id.startgame_button)
-      public void onStartGameClick(View v)
-     {
-         Intent inte = new Intent(this, ColorActivity.class);
-         startActivity(inte);
+    @OnClick(R.id.startgame_button)
+    public void onStartGameClick(View v) {
+        gameService.createGame("game01", new Callback<Game>() {
+            @Override
+            public void success(Game game, Response response) {
+                Intent inte = new Intent(CapoSplashActivity.this, GameActivity.class);
+                inte.putExtra(GameActivity.KEY_MODE, GameActivity.MODE_HOST);
+                inte.putExtra(GameActivity.KEY_ADRESS, address.getDeviceAddress());
+                inte.putExtra(GameActivity.KEY_GAME_ID, game.getName());
+                startActivity(inte);
+            }
 
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
     }
 
     @OnClick(R.id.joingame_button)
-    public void onJoinGameClick(View v)
-    {
+    public void onJoinGameClick(View v) {
+        gameService.joinGame("game01", new Callback<Game>() {
+            @Override
+            public void success(Game game, Response response) {
+                Intent inte = new Intent(CapoSplashActivity.this, GameActivity.class);
+                inte.putExtra(GameActivity.KEY_MODE, GameActivity.MODE_JOIN);
+                inte.putExtra(GameActivity.KEY_ADRESS, address.getDeviceAddress());
+                inte.putExtra(GameActivity.KEY_GAME_ID, game.getName());
+                startActivity(inte);
+            }
 
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+
+    }
+
+    @OnClick(R.id.device_button)
+    public void onDeviceButtonClick(View v) {
+        Intent inte = new Intent(this, DeviceScanActivity.class);
+        startActivity(inte);
+    }
+
+    @OnClick(R.id.device_color)
+    public void onDeviceColorButtonClick(View v) {
+        Intent inte = new Intent(this, ColorActivity.class);
+        startActivity(inte);
+    }
+
+    public void setUpDeviceAddress() {
+        try {
+
+            BluetoothManager mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+            BluetoothAdapter mBluetoothAdapter = mBluetoothManager.getAdapter();
+
+            Method getUUIDsMethod = BluetoothAdapter.class.getDeclaredMethod("getUuids");
+            ParcelUuid[] dUUIDs = (ParcelUuid[]) getUUIDsMethod.invoke(mBluetoothAdapter, null);
+
+            address = new DeviceAddress(dUUIDs[0].getUuid().toString());
+        }
+        catch (Exception e) {
+            Log.e("BLEService", e.getMessage());
+        }
     }
 }
