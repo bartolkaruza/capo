@@ -27,16 +27,46 @@ GET game/game01
 Response:
 ```
 {
-    "players":["01-AA-01-AA","03-CC-03-CC","02-BB-02-BB"],
-    "targetColor":"rgb",
-    "status":"started/waiting"
+    "name": "gameName",
+    "values": [
+        {
+            "address": "someDeviceAddress",
+            "playerNumber": 1
+        },
+        {
+            "address": "111111",
+            "playerNumber": 2
+        },
+        {
+            "address": "111111",
+            "playerNumber": 3
+        }
+    ],
+    "status": "started",
+    "targetColor": "#116C3A"
 }
 ```
 
 GET game
 ```
 [{
-    "name", "game01"
+    "name": "someName",
+    "values": [
+        {
+            "address": "someDeviceAddress",
+            "playerNumber": 1
+        },
+        {
+            "address": "111111",
+            "playerNumber": 2
+        },
+        {
+            "address": "111111",
+            "playerNumber": 3
+        }
+    ],
+    "status": "started",
+    "targetColor": "#116C3A"
 }]
 ```
 
@@ -52,6 +82,7 @@ socket event 'measurement'
 measurement:
 ```
 {
+    "gameId: "someGameName",
     "deviceId": "01-AA-01-AA",
     "values": [
         {
@@ -72,6 +103,7 @@ update
 
 ```
 {
+    "gameId":"someGameName",
     "currentColor" : "rgb",
     "targetCOlor" : "rgb"
 }
