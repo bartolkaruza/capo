@@ -27,6 +27,7 @@ import java.util.List;
 
 import io.blueapps.lightspace.ColorActivity;
 import io.blueapps.lightspace.R;
+import io.blueapps.lightspace.socket.MeasurementSender;
 
 /**
  * PHHomeActivity - The starting point in your own Hue App.
@@ -54,6 +55,8 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
     public static final String TAG = "QuickStart";
     private HueSharedPreferences prefs;
     private AccessPointListAdapter adapter;
+
+    private MeasurementSender rssiSender;
     
     private boolean lastSearchWasIPScan = false;
     
@@ -69,6 +72,9 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
 
         // Gets an instance of the Hue SDK.
         phHueSDK = PHHueSDK.create();
+
+        rssiSender = new MeasurementSender();
+        rssiSender.init();
         
         // Set the Device Name (name of your app). This will be stored in your bridge whitelist entry.
         phHueSDK.setDeviceName("QuickStartApp");
@@ -101,6 +107,13 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
         else {  // First time use, so perform a bridge search.
             doBridgeSearch();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (rssiSender != null)
+            rssiSender.stop();
     }
 
     @Override

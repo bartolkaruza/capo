@@ -29,6 +29,10 @@ public class MeasurementSender {
 
     public MeasurementSender() {
         socket = null;
+    }
+
+    public void init()
+    {
         try {
 //            socket = new SocketIO("http://192.168.1.88:3000/");
 //            socket = new SocketIO("http://bartolkaruza-measure-app.nodejitsu.com/");
@@ -69,6 +73,11 @@ public class MeasurementSender {
             }
 
         });
+    }
+
+    public void stop()
+    {
+        socket.disconnect();
     }
 
     public void updateMeasurement(List<MeasurementPair> measurements) {
