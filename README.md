@@ -22,6 +22,13 @@ PUT game/start
 }
 ```
 
+GET game/list
+```
+[{
+    "name", "game01"
+}]
+```
+
 POST/PUT game/game01/join
 ```
 {
