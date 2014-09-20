@@ -67,11 +67,12 @@ public class MeasurementSender {
 
             @Override
             public void onConnect() {
-                updateMeasurement(new ArrayList<MeasurementPair>());
+
                 Log.d("onConnect", "Connection established");
             }
 
         });
+
     }
 
     public void stop() {
