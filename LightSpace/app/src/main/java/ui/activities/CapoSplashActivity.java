@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
+import com.http.socket.SocketIO;
 import com.philips.lighting.quickstart.PHHomeActivity;
 
 import butterknife.ButterKnife;
@@ -23,7 +24,6 @@ public class CapoSplashActivity extends Activity {
 
     @InjectView(R.id.splashscreen_logo)
     View logo;
-
 
     @InjectView(R.id.menu_button_holder)
     View buttonHolder;
@@ -60,33 +60,29 @@ public class CapoSplashActivity extends Activity {
             deviceButton.setVisibility(View.GONE);
         }
 
-
         doSomeInitialComputation();
     }
 
-    private void doSomeInitialComputation()
-    {
+    private void doSomeInitialComputation() {
 
         new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                switch (msg.what)
-                {
+                switch (msg.what) {
                     case 0:
-                        sendEmptyMessageDelayed(1,1000);
+                        sendEmptyMessageDelayed(1, 1000);
                         break;
                     case 1:
                         gameReady();
                         break;
                 }
             }
-        }.sendEmptyMessageDelayed(0,1000);
+        }.sendEmptyMessageDelayed(0, 1000);
     }
 
-    public void gameReady()
-    {
-        logo.animate().y(-logo.getHeight()/8);
+    public void gameReady() {
+        logo.animate().y(-logo.getHeight() / 8);
         buttonHolder.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
@@ -98,7 +94,6 @@ public class CapoSplashActivity extends Activity {
             }
         });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -118,7 +113,6 @@ public class CapoSplashActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
-
      @OnClick(R.id.startgame_button)
       public void onStartGameClick(View v)
      {
@@ -143,3 +137,4 @@ public class CapoSplashActivity extends Activity {
         startActivity(inte);
     }
 }
+
