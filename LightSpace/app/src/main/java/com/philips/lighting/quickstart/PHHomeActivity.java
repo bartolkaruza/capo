@@ -61,6 +61,7 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
     public static final int MODE_HOST = 1;
 
     private static final long SCAN_PERIOD = 100000;
+    private static final int REQUEST_ENABLE_BT = 1;
 
     private int mode = MODE_JOIN;
 
@@ -82,20 +83,18 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bridgelistlinear);
 
+
+
         if (getIntent().getExtras() != null)
         {
             this.mode = getIntent().getIntExtra(KEY_MODE,MODE_JOIN);
         }
 
+        mHandler = new Handler();
+
         initBLE();
         initSockets();
         initHUEAPI();
-
-        adapter = new AccessPointListAdapter(getApplicationContext(), phHueSDK.getAccessPointsFound());
-        
-        ListView accessPointList = (ListView) findViewById(R.id.bridge_list);
-        accessPointList.setOnItemClickListener(this);
-        accessPointList.setAdapter(adapter);
         
 
     }
@@ -160,6 +159,27 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
         super.onStop();
         if (rssiSender != null)
             rssiSender.stop();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        scanLeDevice(false);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Ensures Bluetooth is enabled on the device. If Bluetooth is not currently enabled,
+        // fire an intent to display a dialog asking the user to grant permission to enable it.
+        if (!mBluetoothAdapter.isEnabled()) {
+            if (!mBluetoothAdapter.isEnabled()) {
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            }
+        }
+
+        scanLeDevice(true);
     }
 
     @Override
