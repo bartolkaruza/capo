@@ -15,20 +15,24 @@ philipshue303
 
 
 game/start
+```
 {
     "name": "game01",
     "deviceAddress": "01-AA-01-AA"
 }
+```
 
 game/join
+```
 {
     "name": "game01",
     "deviceAddress": "01-AA-01-AA"
 }
-
+```
 
 game/game01/update
 Request:
+```
 {
     [
         {
@@ -41,8 +45,11 @@ Request:
         }
     ]
 }
+```
 Response:
+```
 {
     "currentColor": "",
     "targetCOlor": ""
 }
+```
