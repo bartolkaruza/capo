@@ -7,7 +7,6 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -29,7 +28,6 @@ import com.philips.lighting.model.PHLightState;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import io.blueapps.lightspace.bleutooth.MyBluetoothDevice;
 
@@ -280,18 +278,11 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorSelect
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    boolean deviceAdded = mLeDeviceListAdapter.addDevice(new MyBluetoothDevice(device, rssi));
+                    MyBluetoothDevice bluetoothDevice = new MyBluetoothDevice(device, rssi);
+                    boolean deviceAdded = mLeDeviceListAdapter.addDevice(bluetoothDevice);
 
                     if (deviceAdded) {
-                        Random rand = new Random();
-
-                        int i = 255 + rssi;
-                        int red = i - rand.nextInt(i);
-                        int green = i - rand.nextInt(i);
-                        int blue = i - rand.nextInt(i);
-
-                        int color = -Color.argb(255, red, green, blue);
-
+                        int color = bluetoothDevice.getColor();
                         picker.setColor(color);
                         picker.setShowOldCenterColor(false);
 
