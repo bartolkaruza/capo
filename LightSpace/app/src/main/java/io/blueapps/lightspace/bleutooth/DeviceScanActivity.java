@@ -36,8 +36,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.philips.lighting.hue.sdk.PHHueSDK;
+import com.philips.lighting.hue.sdk.utilities.PHUtilities;
+import com.philips.lighting.model.PHBridge;
+import com.philips.lighting.model.PHLight;
+import com.philips.lighting.model.PHLightState;
+import com.philips.lighting.quickstart.PHHomeActivity;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import io.blueapps.lightspace.R;
 
@@ -53,6 +62,9 @@ public class DeviceScanActivity extends ListActivity {
     private static final int REQUEST_ENABLE_BT = 1;
     // Stops scanning after 10 seconds.
     private static final long SCAN_PERIOD = 100000;
+
+    private PHHueSDK phHueSDK;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -204,6 +216,20 @@ public class DeviceScanActivity extends ListActivity {
                     }
                 }
             }
+
+            int i = averageOut();
+            i = Math.abs(i);
+            setHueColor(i);
+        }
+
+        public int averageOut() {
+           int sum = 0;
+
+           for(MyBluetoothDevice device : mLeDevices) {
+              sum += device.getRssi();
+           }
+
+           return mLeDevices.size() > 0 ? sum / mLeDevices.size() : sum ;
         }
 
         public MyBluetoothDevice getDevice(int position) {
@@ -261,6 +287,7 @@ public class DeviceScanActivity extends ListActivity {
         }
     }
 
+
     // Device scan callback.
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
 
@@ -279,5 +306,31 @@ public class DeviceScanActivity extends ListActivity {
     static class ViewHolder {
         TextView deviceName;
         TextView deviceAddress;
+    }
+
+    public void setHueColor(int color) {
+        PHBridge bridge = phHueSDK.getSelectedBridge();
+
+        List<PHLight> allLights = bridge.getResourceCache().getAllLights();
+
+        for (PHLight light : allLights) {
+            float xy[] = PHUtilities.calculateXY(color, "");
+            PHLightState lightState = new PHLightState();
+            lightState.setX(xy[0]);
+            lightState.setY(xy[1]);
+
+            //lightState.setHue(rand.nextInt(MAX_HUE));
+            // To validate your lightstate is valid (before sending to the bridge) you can use:
+            // String validState = lightState.validateState();
+//            bridge.updateLightState(light, lightState, listener);
+             bridge.updateLightState(light, lightState);   // If no bridge response is required then use this simpler form.
+        }
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        phHueSDK.disableAllHeartbeat();
     }
 }
