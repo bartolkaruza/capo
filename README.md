@@ -18,15 +18,14 @@ game/start
 ```
 {
     "name": "game01",
-    "deviceAddress": "01-AA-01-AA"
+    "deviceAddress" : "01-AA-01-AA"
 }
 ```
 
-game/join
+game/game01/join
 ```
 {
-    "name": "game01",
-    "deviceAddress": "01-AA-01-AA"
+    "deviceAddress" : "01-AA-01-AA"
 }
 ```
 
@@ -37,12 +36,12 @@ Request:
 {
     [
         {
-            deviceAddress: "01-AA-01-AA",
-            rssi: "-82"
+            "deviceAddress" : "01-AA-01-AA",
+            "rssi" : "-82"
         },
         {
-            deviceAddress: "01-AA-01-A2",
-            "rssi: "-83"
+            "deviceAddress" : "01-AA-01-A2",
+            "rssi" : "-83"
         }
     ]
 }
@@ -51,7 +50,7 @@ Response:
 
 ```
 {
-    "currentColor": "",
-    "targetCOlor": ""
+    "currentColor" : "",
+    "targetCOlor" : ""
 }
 ```
