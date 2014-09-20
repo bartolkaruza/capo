@@ -31,6 +31,7 @@ game/join
 ```
 
 game/game01/update
+
 Request:
 ```
 {
@@ -47,6 +48,7 @@ Request:
 }
 ```
 Response:
+
 ```
 {
     "currentColor": "",
