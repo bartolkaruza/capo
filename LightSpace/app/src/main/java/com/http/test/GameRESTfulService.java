@@ -1,29 +1,28 @@
 package com.http.test;
 
+import com.http.GameRESTful;
 import com.http.data.CreateGame;
 import com.http.data.DeviceAddress;
 import com.http.data.Game;
-import com.http.GameRESTful;
 
 import java.util.List;
 
 import retrofit.RestAdapter;
 
 /**
- * Created by Sunil Shetty on 9/20/2014.
- * sunil.shetty@klm.com
+ * Created by Sunil Shetty on 9/20/2014. sunil.shetty@klm.com
  */
-public class GameRESTfulTest {
-
+public class GameRESTfulService {
+    private static GameRESTfulService instance;
     private GameRESTful service;
 
-    public static void test(){
-        new GameRESTfulTest();
+    private GameRESTfulService() {
+        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(GameRESTful.END_POINT).build();
+
+        service = restAdapter.create(GameRESTful.class);
     }
 
-    private GameRESTfulTest() {
-        initGameRESTfulService();
-
+    private void da() {
         new Thread() {
             @Override
             public void run() {
@@ -38,14 +37,13 @@ public class GameRESTfulTest {
 
             }
         }.start();
-
     }
 
-    private void initGameRESTfulService() {
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(GameRESTful.END_POINT)
-                .build();
-
-        service = restAdapter.create(GameRESTful.class);
+    public static GameRESTfulService newInstance() {
+        if (instance == null) {
+            instance = new GameRESTfulService();
+        }
+        return newInstance();
     }
+
 }
