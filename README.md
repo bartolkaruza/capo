@@ -14,7 +14,7 @@ philipshue303
 00:17:88:17:16:3b
 
 
-PUT game/start
+PUT game/create
 ```
 {
     "name": "game01",
@@ -22,7 +22,17 @@ PUT game/start
 }
 ```
 
-GET game/list
+GET game/game01
+Response:
+```
+{
+    "players":["01-AA-01-AA","03-CC-03-CC","02-BB-02-BB"],
+    "targetColor":"rgb",
+    "status":"started/waiting"
+}
+```
+
+GET game
 ```
 [{
     "name", "game01"
