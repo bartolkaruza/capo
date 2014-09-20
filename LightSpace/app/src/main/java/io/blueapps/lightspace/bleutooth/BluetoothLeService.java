@@ -30,10 +30,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.os.ParcelUuid;
 import android.util.Log;
 
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
 
@@ -218,16 +216,17 @@ public class BluetoothLeService extends Service {
                 return false;
             }
         }
-
-        try {
-            Method getUUIDsMethod = BluetoothAdapter.class.getDeclaredMethod("getUuids", null);
-            ParcelUuid[] dUUIDs = (ParcelUuid[]) getUUIDsMethod.invoke(mBluetoothAdapter, null);
-
-            MY_UUID = dUUIDs[0].getUuid().toString();
-        }
-        catch (Exception e) {
-
-        }
+//TODO
+//
+//        try {
+//            Method getUUIDsMethod = BluetoothAdapter.class.getDeclaredMethod("getUuids", null);
+//            ParcelUuid[] dUUIDs = (ParcelUuid[]) getUUIDsMethod.invoke(mBluetoothAdapter, null);
+//
+//            MY_UUID = dUUIDs[0].getUuid().toString();
+//        }
+//        catch (Exception e) {
+//            Log.e("BLEService", e.getMessage());
+//        }
 
         final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
 
