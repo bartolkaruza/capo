@@ -6,7 +6,9 @@ import com.http.data.Game;
 
 import java.util.List;
 
+import retrofit.Callback;
 import retrofit.RestAdapter;
+import retrofit.http.Path;
 
 /**
  * Created by Sunil Shetty on 9/20/2014. sunil.shetty@klm.com
@@ -14,35 +16,38 @@ import retrofit.RestAdapter;
 public class GameRESTfulService {
     private static GameRESTfulService instance;
     private GameRESTful service;
+    private DeviceAddress localAddress;
 
-    private GameRESTfulService() {
+    private GameRESTfulService(DeviceAddress address) {
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(GameRESTful.END_POINT).build();
 
         service = restAdapter.create(GameRESTful.class);
+        this.localAddress = address;
     }
 
-    private void da() {
-        new Thread() {
-            @Override
-            public void run() {
-
-                Game game01 = service.createGame(new CreateGame("01-AA-01-AA", "game01"));
-
-                List<Game> games = service.getGames();
-
-                Game game011 = service.getGame("game01");
-
-                Game game012 = service.joinGame("game01", new DeviceAddress("01-AA-01-AA"));
-
-            }
-        }.start();
-    }
-
-    public static GameRESTfulService newInstance() {
+    public static GameRESTfulService getInstance(DeviceAddress address) {
         if (instance == null) {
-            instance = new GameRESTfulService();
+            instance = new GameRESTfulService(address);
         }
-        return newInstance();
+
+        return instance;
+    }
+
+    public void createGame(String game, Callback<Game> callback) {
+        CreateGame gameRequest = new CreateGame(localAddress.getDeviceAddress(), game);
+        service.createGame(gameRequest, callback);
+    }
+
+    public void getGames(Callback<List<Game>> callback) {
+        service.getGames(callback);
+    }
+
+    public void getGame(@Path("gameId") String gameId, Callback<Game> callback) {
+        service.getGame(gameId, callback);
+    }
+
+    public void joinGame(String game, Callback<Game> callback) {
+        service.joinGame(game, localAddress, callback);
     }
 
 }

@@ -10,7 +10,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
-import com.http.socket.SocketIO;
+import com.http.GameRESTfulService;
+import com.http.data.DeviceAddress;
+import com.http.data.Game;
 import com.philips.lighting.quickstart.PHHomeActivity;
 
 import butterknife.ButterKnife;
@@ -19,6 +21,9 @@ import butterknife.OnClick;
 import io.blueapps.lightspace.BuildConfig;
 import io.blueapps.lightspace.R;
 import io.blueapps.lightspace.bleutooth.DeviceScanActivity;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class CapoSplashActivity extends Activity {
 
@@ -33,11 +38,15 @@ public class CapoSplashActivity extends Activity {
     @InjectView(R.id.device_button)
     View deviceButton;
 
+    // TODO fix deviceAddress
+    DeviceAddress address = new DeviceAddress("");
+    GameRESTfulService gameService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capo_splash);
-
+        gameService = GameRESTfulService.getInstance(address);
         content = findViewById(android.R.id.content);
 
         ButterKnife.inject(this);
@@ -51,12 +60,10 @@ public class CapoSplashActivity extends Activity {
             }
         });
 
-        if (BuildConfig.DEBUG)
-        {
+        if (BuildConfig.DEBUG) {
             deviceButton.setVisibility(View.VISIBLE);
         }
-        else
-        {
+        else {
             deviceButton.setVisibility(View.GONE);
         }
 
@@ -113,28 +120,46 @@ public class CapoSplashActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
-     @OnClick(R.id.startgame_button)
-      public void onStartGameClick(View v)
-     {
-         Intent inte = new Intent(this, PHHomeActivity.class);
-         inte.putExtra(PHHomeActivity.KEY_MODE, PHHomeActivity.MODE_HOST);
-         startActivity(inte);
+
+    @OnClick(R.id.startgame_button)
+    public void onStartGameClick(View v) {
+        gameService.createGame("game01", new Callback<Game>() {
+            @Override
+            public void success(Game game, Response response) {
+                Intent inte = new Intent(CapoSplashActivity.this, PHHomeActivity.class);
+                inte.putExtra(PHHomeActivity.KEY_MODE, PHHomeActivity.MODE_HOST);
+                startActivity(inte);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
 
     }
 
     @OnClick(R.id.joingame_button)
-    public void onJoinGameClick(View v)
-    {
-        Intent inte = new Intent(this, PHHomeActivity.class);
-        inte.putExtra(PHHomeActivity.KEY_MODE, PHHomeActivity.MODE_JOIN);
-        startActivity(inte);
+    public void onJoinGameClick(View v) {
+        gameService.joinGame("game01", new Callback<Game>() {
+            @Override
+            public void success(Game game, Response response) {
+                Intent inte = new Intent(CapoSplashActivity.this, PHHomeActivity.class);
+                inte.putExtra(PHHomeActivity.KEY_MODE, PHHomeActivity.MODE_JOIN);
+                startActivity(inte);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+
     }
 
     @OnClick(R.id.device_button)
-    public void onDeviceButtonClick(View v)
-    {
+    public void onDeviceButtonClick(View v) {
         Intent inte = new Intent(this, DeviceScanActivity.class);
         startActivity(inte);
     }
 }
-
