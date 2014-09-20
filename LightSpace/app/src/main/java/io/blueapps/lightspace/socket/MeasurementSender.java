@@ -31,8 +31,8 @@ public class MeasurementSender {
         socket = null;
         try {
 //            socket = new SocketIO("http://192.168.1.88:3000/");
-            socket = new SocketIO("http://bartolkaruza-measure-app.nodejitsu.com/");
-//            socket = new SocketIO("http://10.0.2.2:3000");
+//            socket = new SocketIO("http://bartolkaruza-measure-app.nodejitsu.com/");
+            socket = new SocketIO("http://10.12.1.74:3000");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -64,6 +64,7 @@ public class MeasurementSender {
 
             @Override
             public void onConnect() {
+                updateMeasurement(new ArrayList<Pair<String, Integer>>());
                 Log.d("onConnect", "Connection established");
             }
 
