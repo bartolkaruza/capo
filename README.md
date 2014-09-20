@@ -47,9 +47,9 @@ POST/PUT game/game01/join
 }
 ```
 
-game/game01/update
+socket event 'measurement'
 
-Request:
+measurement:
 ```
 {
     "deviceId": "01-AA-01-AA",
@@ -65,7 +65,10 @@ Request:
     ]
 }
 ```
-Response:
+
+socket event 'update'
+
+update
 
 ```
 {
