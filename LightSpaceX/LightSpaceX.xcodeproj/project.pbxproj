@@ -1,0 +1,582 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		BA8B015919CD97B2001EEC53 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8B015819CD97B2001EEC53 /* AppDelegate.swift */; };
+		BA8B015B19CD97B2001EEC53 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = BA8B015A19CD97B2001EEC53 /* GameScene.sks */; };
+		BA8B015D19CD97B2001EEC53 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8B015C19CD97B2001EEC53 /* GameScene.swift */; };
+		BA8B015F19CD97B2001EEC53 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8B015E19CD97B2001EEC53 /* GameViewController.swift */; };
+		BA8B016219CD97B2001EEC53 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA8B016019CD97B2001EEC53 /* Main.storyboard */; };
+		BA8B016419CD97B2001EEC53 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BA8B016319CD97B2001EEC53 /* Images.xcassets */; };
+		BA8B016719CD97B2001EEC53 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA8B016519CD97B2001EEC53 /* LaunchScreen.xib */; };
+		BA8B017319CD97B3001EEC53 /* LightSpaceXTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8B017219CD97B3001EEC53 /* LightSpaceXTests.swift */; };
+		BA8B018D19CD9859001EEC53 /* HueSDK_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA8B017C19CD9858001EEC53 /* HueSDK_iOS.framework */; };
+		BA8B018E19CD9859001EEC53 /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = BA8B017F19CD9858001EEC53 /* DDAbstractDatabaseLogger.m */; };
+		BA8B018F19CD9859001EEC53 /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = BA8B018119CD9858001EEC53 /* DDASLLogger.m */; };
+		BA8B019019CD9859001EEC53 /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = BA8B018319CD9859001EEC53 /* DDFileLogger.m */; };
+		BA8B019119CD9859001EEC53 /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = BA8B018519CD9859001EEC53 /* DDLog.m */; };
+		BA8B019219CD9859001EEC53 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = BA8B018719CD9859001EEC53 /* DDTTYLogger.m */; };
+		BA8B019319CD9859001EEC53 /* ContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = BA8B018A19CD9859001EEC53 /* ContextFilterLogFormatter.m */; };
+		BA8B019419CD9859001EEC53 /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = BA8B018C19CD9859001EEC53 /* DispatchQueueLogFormatter.m */; };
+		BA8B01A419CD9A6F001EEC53 /* PHLoadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BA8B019919CD9A6F001EEC53 /* PHLoadingViewController.m */; };
+		BA8B01A519CD9A6F001EEC53 /* PHLoadingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA8B019A19CD9A6F001EEC53 /* PHLoadingViewController.xib */; };
+		BA8B01A619CD9A6F001EEC53 /* PHBridgePushLinkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BA8B019C19CD9A6F001EEC53 /* PHBridgePushLinkViewController.m */; };
+		BA8B01A719CD9A6F001EEC53 /* PHBridgePushLinkViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA8B019D19CD9A6F001EEC53 /* PHBridgePushLinkViewController.xib */; };
+		BA8B01A819CD9A6F001EEC53 /* PHBridgeSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BA8B019F19CD9A6F001EEC53 /* PHBridgeSelectionViewController.m */; };
+		BA8B01A919CD9A6F001EEC53 /* PHBridgeSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA8B01A019CD9A6F001EEC53 /* PHBridgeSelectionViewController.xib */; };
+		BA8B01AA19CD9A6F001EEC53 /* press_smartbridge.png in Resources */ = {isa = PBXBuildFile; fileRef = BA8B01A219CD9A6F001EEC53 /* press_smartbridge.png */; };
+		BA8B01AB19CD9A6F001EEC53 /* press_smartbridge@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BA8B01A319CD9A6F001EEC53 /* press_smartbridge@2x.png */; };
+		BA8B01AD19CDA415001EEC53 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA8B01AC19CDA415001EEC53 /* CoreBluetooth.framework */; };
+		BA8B01AF19CDA451001EEC53 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA8B01AE19CDA451001EEC53 /* SpriteKit.framework */; };
+		BA8B01B119CDA45C001EEC53 /* SceneKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA8B01B019CDA45C001EEC53 /* SceneKit.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BA8B016D19CD97B3001EEC53 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BA8B014B19CD97B2001EEC53 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BA8B015219CD97B2001EEC53;
+			remoteInfo = LightSpaceX;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		BA8B015319CD97B2001EEC53 /* LightSpaceX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LightSpaceX.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BA8B015719CD97B2001EEC53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BA8B015819CD97B2001EEC53 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		BA8B015A19CD97B2001EEC53 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
+		BA8B015C19CD97B2001EEC53 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		BA8B015E19CD97B2001EEC53 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		BA8B016119CD97B2001EEC53 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		BA8B016319CD97B2001EEC53 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		BA8B016619CD97B2001EEC53 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		BA8B016C19CD97B2001EEC53 /* LightSpaceXTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LightSpaceXTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BA8B017119CD97B3001EEC53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BA8B017219CD97B3001EEC53 /* LightSpaceXTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightSpaceXTests.swift; sourceTree = "<group>"; };
+		BA8B017C19CD9858001EEC53 /* HueSDK_iOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HueSDK_iOS.framework; sourceTree = "<group>"; };
+		BA8B017E19CD9858001EEC53 /* DDAbstractDatabaseLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDAbstractDatabaseLogger.h; sourceTree = "<group>"; };
+		BA8B017F19CD9858001EEC53 /* DDAbstractDatabaseLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDAbstractDatabaseLogger.m; sourceTree = "<group>"; };
+		BA8B018019CD9858001EEC53 /* DDASLLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDASLLogger.h; sourceTree = "<group>"; };
+		BA8B018119CD9858001EEC53 /* DDASLLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDASLLogger.m; sourceTree = "<group>"; };
+		BA8B018219CD9859001EEC53 /* DDFileLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDFileLogger.h; sourceTree = "<group>"; };
+		BA8B018319CD9859001EEC53 /* DDFileLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDFileLogger.m; sourceTree = "<group>"; };
+		BA8B018419CD9859001EEC53 /* DDLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDLog.h; sourceTree = "<group>"; };
+		BA8B018519CD9859001EEC53 /* DDLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDLog.m; sourceTree = "<group>"; };
+		BA8B018619CD9859001EEC53 /* DDTTYLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTTYLogger.h; sourceTree = "<group>"; };
+		BA8B018719CD9859001EEC53 /* DDTTYLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDTTYLogger.m; sourceTree = "<group>"; };
+		BA8B018919CD9859001EEC53 /* ContextFilterLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContextFilterLogFormatter.h; sourceTree = "<group>"; };
+		BA8B018A19CD9859001EEC53 /* ContextFilterLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContextFilterLogFormatter.m; sourceTree = "<group>"; };
+		BA8B018B19CD9859001EEC53 /* DispatchQueueLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DispatchQueueLogFormatter.h; sourceTree = "<group>"; };
+		BA8B018C19CD9859001EEC53 /* DispatchQueueLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DispatchQueueLogFormatter.m; sourceTree = "<group>"; };
+		BA8B019519CD98CD001EEC53 /* LightSpaceX-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "LightSpaceX-Bridging-Header.h"; path = "../LightSpaceX-Bridging-Header.h"; sourceTree = "<group>"; };
+		BA8B019819CD9A6F001EEC53 /* PHLoadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHLoadingViewController.h; sourceTree = "<group>"; };
+		BA8B019919CD9A6F001EEC53 /* PHLoadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHLoadingViewController.m; sourceTree = "<group>"; };
+		BA8B019A19CD9A6F001EEC53 /* PHLoadingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PHLoadingViewController.xib; sourceTree = "<group>"; };
+		BA8B019B19CD9A6F001EEC53 /* PHBridgePushLinkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHBridgePushLinkViewController.h; sourceTree = "<group>"; };
+		BA8B019C19CD9A6F001EEC53 /* PHBridgePushLinkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHBridgePushLinkViewController.m; sourceTree = "<group>"; };
+		BA8B019D19CD9A6F001EEC53 /* PHBridgePushLinkViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PHBridgePushLinkViewController.xib; sourceTree = "<group>"; };
+		BA8B019E19CD9A6F001EEC53 /* PHBridgeSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHBridgeSelectionViewController.h; sourceTree = "<group>"; };
+		BA8B019F19CD9A6F001EEC53 /* PHBridgeSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHBridgeSelectionViewController.m; sourceTree = "<group>"; };
+		BA8B01A019CD9A6F001EEC53 /* PHBridgeSelectionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PHBridgeSelectionViewController.xib; sourceTree = "<group>"; };
+		BA8B01A219CD9A6F001EEC53 /* press_smartbridge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = press_smartbridge.png; sourceTree = "<group>"; };
+		BA8B01A319CD9A6F001EEC53 /* press_smartbridge@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "press_smartbridge@2x.png"; sourceTree = "<group>"; };
+		BA8B01AC19CDA415001EEC53 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		BA8B01AE19CDA451001EEC53 /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
+		BA8B01B019CDA45C001EEC53 /* SceneKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SceneKit.framework; path = System/Library/Frameworks/SceneKit.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BA8B015019CD97B2001EEC53 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA8B01B119CDA45C001EEC53 /* SceneKit.framework in Frameworks */,
+				BA8B01AF19CDA451001EEC53 /* SpriteKit.framework in Frameworks */,
+				BA8B01AD19CDA415001EEC53 /* CoreBluetooth.framework in Frameworks */,
+				BA8B018D19CD9859001EEC53 /* HueSDK_iOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BA8B016919CD97B2001EEC53 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		BA8B014A19CD97B2001EEC53 = {
+			isa = PBXGroup;
+			children = (
+				BA8B01B019CDA45C001EEC53 /* SceneKit.framework */,
+				BA8B01AE19CDA451001EEC53 /* SpriteKit.framework */,
+				BA8B01AC19CDA415001EEC53 /* CoreBluetooth.framework */,
+				BA8B017C19CD9858001EEC53 /* HueSDK_iOS.framework */,
+				BA8B019619CD9A6F001EEC53 /* SDKWizard */,
+				BA8B017D19CD9858001EEC53 /* Lumberjack */,
+				BA8B015519CD97B2001EEC53 /* LightSpaceX */,
+				BA8B016F19CD97B3001EEC53 /* LightSpaceXTests */,
+				BA8B015419CD97B2001EEC53 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		BA8B015419CD97B2001EEC53 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BA8B015319CD97B2001EEC53 /* LightSpaceX.app */,
+				BA8B016C19CD97B2001EEC53 /* LightSpaceXTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BA8B015519CD97B2001EEC53 /* LightSpaceX */ = {
+			isa = PBXGroup;
+			children = (
+				BA8B015819CD97B2001EEC53 /* AppDelegate.swift */,
+				BA8B015A19CD97B2001EEC53 /* GameScene.sks */,
+				BA8B015C19CD97B2001EEC53 /* GameScene.swift */,
+				BA8B015E19CD97B2001EEC53 /* GameViewController.swift */,
+				BA8B016019CD97B2001EEC53 /* Main.storyboard */,
+				BA8B016319CD97B2001EEC53 /* Images.xcassets */,
+				BA8B016519CD97B2001EEC53 /* LaunchScreen.xib */,
+				BA8B015619CD97B2001EEC53 /* Supporting Files */,
+			);
+			path = LightSpaceX;
+			sourceTree = "<group>";
+		};
+		BA8B015619CD97B2001EEC53 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				BA8B015719CD97B2001EEC53 /* Info.plist */,
+				BA8B019519CD98CD001EEC53 /* LightSpaceX-Bridging-Header.h */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BA8B016F19CD97B3001EEC53 /* LightSpaceXTests */ = {
+			isa = PBXGroup;
+			children = (
+				BA8B017219CD97B3001EEC53 /* LightSpaceXTests.swift */,
+				BA8B017019CD97B3001EEC53 /* Supporting Files */,
+			);
+			path = LightSpaceXTests;
+			sourceTree = "<group>";
+		};
+		BA8B017019CD97B3001EEC53 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				BA8B017119CD97B3001EEC53 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BA8B017D19CD9858001EEC53 /* Lumberjack */ = {
+			isa = PBXGroup;
+			children = (
+				BA8B017E19CD9858001EEC53 /* DDAbstractDatabaseLogger.h */,
+				BA8B017F19CD9858001EEC53 /* DDAbstractDatabaseLogger.m */,
+				BA8B018019CD9858001EEC53 /* DDASLLogger.h */,
+				BA8B018119CD9858001EEC53 /* DDASLLogger.m */,
+				BA8B018219CD9859001EEC53 /* DDFileLogger.h */,
+				BA8B018319CD9859001EEC53 /* DDFileLogger.m */,
+				BA8B018419CD9859001EEC53 /* DDLog.h */,
+				BA8B018519CD9859001EEC53 /* DDLog.m */,
+				BA8B018619CD9859001EEC53 /* DDTTYLogger.h */,
+				BA8B018719CD9859001EEC53 /* DDTTYLogger.m */,
+				BA8B018819CD9859001EEC53 /* Extensions */,
+			);
+			path = Lumberjack;
+			sourceTree = "<group>";
+		};
+		BA8B018819CD9859001EEC53 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				BA8B018919CD9859001EEC53 /* ContextFilterLogFormatter.h */,
+				BA8B018A19CD9859001EEC53 /* ContextFilterLogFormatter.m */,
+				BA8B018B19CD9859001EEC53 /* DispatchQueueLogFormatter.h */,
+				BA8B018C19CD9859001EEC53 /* DispatchQueueLogFormatter.m */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		BA8B019619CD9A6F001EEC53 /* SDKWizard */ = {
+			isa = PBXGroup;
+			children = (
+				BA8B019719CD9A6F001EEC53 /* LoadingView */,
+				BA8B019B19CD9A6F001EEC53 /* PHBridgePushLinkViewController.h */,
+				BA8B019C19CD9A6F001EEC53 /* PHBridgePushLinkViewController.m */,
+				BA8B019D19CD9A6F001EEC53 /* PHBridgePushLinkViewController.xib */,
+				BA8B019E19CD9A6F001EEC53 /* PHBridgeSelectionViewController.h */,
+				BA8B019F19CD9A6F001EEC53 /* PHBridgeSelectionViewController.m */,
+				BA8B01A019CD9A6F001EEC53 /* PHBridgeSelectionViewController.xib */,
+				BA8B01A119CD9A6F001EEC53 /* Resources */,
+			);
+			path = SDKWizard;
+			sourceTree = "<group>";
+		};
+		BA8B019719CD9A6F001EEC53 /* LoadingView */ = {
+			isa = PBXGroup;
+			children = (
+				BA8B019819CD9A6F001EEC53 /* PHLoadingViewController.h */,
+				BA8B019919CD9A6F001EEC53 /* PHLoadingViewController.m */,
+				BA8B019A19CD9A6F001EEC53 /* PHLoadingViewController.xib */,
+			);
+			path = LoadingView;
+			sourceTree = "<group>";
+		};
+		BA8B01A119CD9A6F001EEC53 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				BA8B01A219CD9A6F001EEC53 /* press_smartbridge.png */,
+				BA8B01A319CD9A6F001EEC53 /* press_smartbridge@2x.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		BA8B015219CD97B2001EEC53 /* LightSpaceX */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BA8B017619CD97B3001EEC53 /* Build configuration list for PBXNativeTarget "LightSpaceX" */;
+			buildPhases = (
+				BA8B014F19CD97B2001EEC53 /* Sources */,
+				BA8B015019CD97B2001EEC53 /* Frameworks */,
+				BA8B015119CD97B2001EEC53 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LightSpaceX;
+			productName = LightSpaceX;
+			productReference = BA8B015319CD97B2001EEC53 /* LightSpaceX.app */;
+			productType = "com.apple.product-type.application";
+		};
+		BA8B016B19CD97B2001EEC53 /* LightSpaceXTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BA8B017919CD97B3001EEC53 /* Build configuration list for PBXNativeTarget "LightSpaceXTests" */;
+			buildPhases = (
+				BA8B016819CD97B2001EEC53 /* Sources */,
+				BA8B016919CD97B2001EEC53 /* Frameworks */,
+				BA8B016A19CD97B2001EEC53 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BA8B016E19CD97B3001EEC53 /* PBXTargetDependency */,
+			);
+			name = LightSpaceXTests;
+			productName = LightSpaceXTests;
+			productReference = BA8B016C19CD97B2001EEC53 /* LightSpaceXTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BA8B014B19CD97B2001EEC53 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0600;
+				ORGANIZATIONNAME = capo;
+				TargetAttributes = {
+					BA8B015219CD97B2001EEC53 = {
+						CreatedOnToolsVersion = 6.0;
+					};
+					BA8B016B19CD97B2001EEC53 = {
+						CreatedOnToolsVersion = 6.0;
+						TestTargetID = BA8B015219CD97B2001EEC53;
+					};
+				};
+			};
+			buildConfigurationList = BA8B014E19CD97B2001EEC53 /* Build configuration list for PBXProject "LightSpaceX" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = BA8B014A19CD97B2001EEC53;
+			productRefGroup = BA8B015419CD97B2001EEC53 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BA8B015219CD97B2001EEC53 /* LightSpaceX */,
+				BA8B016B19CD97B2001EEC53 /* LightSpaceXTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BA8B015119CD97B2001EEC53 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA8B01AA19CD9A6F001EEC53 /* press_smartbridge.png in Resources */,
+				BA8B01AB19CD9A6F001EEC53 /* press_smartbridge@2x.png in Resources */,
+				BA8B016719CD97B2001EEC53 /* LaunchScreen.xib in Resources */,
+				BA8B01A919CD9A6F001EEC53 /* PHBridgeSelectionViewController.xib in Resources */,
+				BA8B01A519CD9A6F001EEC53 /* PHLoadingViewController.xib in Resources */,
+				BA8B016419CD97B2001EEC53 /* Images.xcassets in Resources */,
+				BA8B015B19CD97B2001EEC53 /* GameScene.sks in Resources */,
+				BA8B016219CD97B2001EEC53 /* Main.storyboard in Resources */,
+				BA8B01A719CD9A6F001EEC53 /* PHBridgePushLinkViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BA8B016A19CD97B2001EEC53 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BA8B014F19CD97B2001EEC53 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA8B019119CD9859001EEC53 /* DDLog.m in Sources */,
+				BA8B019219CD9859001EEC53 /* DDTTYLogger.m in Sources */,
+				BA8B015D19CD97B2001EEC53 /* GameScene.swift in Sources */,
+				BA8B019019CD9859001EEC53 /* DDFileLogger.m in Sources */,
+				BA8B015F19CD97B2001EEC53 /* GameViewController.swift in Sources */,
+				BA8B019419CD9859001EEC53 /* DispatchQueueLogFormatter.m in Sources */,
+				BA8B018E19CD9859001EEC53 /* DDAbstractDatabaseLogger.m in Sources */,
+				BA8B015919CD97B2001EEC53 /* AppDelegate.swift in Sources */,
+				BA8B018F19CD9859001EEC53 /* DDASLLogger.m in Sources */,
+				BA8B019319CD9859001EEC53 /* ContextFilterLogFormatter.m in Sources */,
+				BA8B01A619CD9A6F001EEC53 /* PHBridgePushLinkViewController.m in Sources */,
+				BA8B01A819CD9A6F001EEC53 /* PHBridgeSelectionViewController.m in Sources */,
+				BA8B01A419CD9A6F001EEC53 /* PHLoadingViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BA8B016819CD97B2001EEC53 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA8B017319CD97B3001EEC53 /* LightSpaceXTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BA8B016E19CD97B3001EEC53 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BA8B015219CD97B2001EEC53 /* LightSpaceX */;
+			targetProxy = BA8B016D19CD97B3001EEC53 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		BA8B016019CD97B2001EEC53 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				BA8B016119CD97B2001EEC53 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		BA8B016519CD97B2001EEC53 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				BA8B016619CD97B2001EEC53 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		BA8B017419CD97B3001EEC53 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = "${SRCROOT}/SDKWizard";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		BA8B017519CD97B3001EEC53 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = "${SRCROOT}/SDKWizard";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		BA8B017719CD97B3001EEC53 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = LightSpaceX/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = SDKWizard/;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "LightSpaceX-Bridging-Header.h";
+			};
+			name = Debug;
+		};
+		BA8B017819CD97B3001EEC53 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = LightSpaceX/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = SDKWizard/;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "LightSpaceX-Bridging-Header.h";
+			};
+			name = Release;
+		};
+		BA8B017A19CD97B3001EEC53 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = LightSpaceXTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LightSpaceX.app/LightSpaceX";
+			};
+			name = Debug;
+		};
+		BA8B017B19CD97B3001EEC53 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = LightSpaceXTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LightSpaceX.app/LightSpaceX";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BA8B014E19CD97B2001EEC53 /* Build configuration list for PBXProject "LightSpaceX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BA8B017419CD97B3001EEC53 /* Debug */,
+				BA8B017519CD97B3001EEC53 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BA8B017619CD97B3001EEC53 /* Build configuration list for PBXNativeTarget "LightSpaceX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BA8B017719CD97B3001EEC53 /* Debug */,
+				BA8B017819CD97B3001EEC53 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		BA8B017919CD97B3001EEC53 /* Build configuration list for PBXNativeTarget "LightSpaceXTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BA8B017A19CD97B3001EEC53 /* Debug */,
+				BA8B017B19CD97B3001EEC53 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BA8B014B19CD97B2001EEC53 /* Project object */;
+}
