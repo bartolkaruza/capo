@@ -18,7 +18,7 @@ public class LightSpaceActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_light_space_activitiy);
         MeasurementSender sender = new MeasurementSender();
-        sender.updateMeasurement(new ArrayList<Pair<String, Integer>>());
+
     };
 
     @Override
