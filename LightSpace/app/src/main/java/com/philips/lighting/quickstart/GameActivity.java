@@ -6,7 +6,6 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -15,8 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.philips.lighting.data.AccessPointListAdapter;
 import com.philips.lighting.data.HueSharedPreferences;
@@ -34,7 +31,6 @@ import java.util.List;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
-import io.blueapps.lightspace.ColorActivity;
 import io.blueapps.lightspace.R;
 import io.blueapps.lightspace.bleutooth.MyBluetoothDevice;
 import io.blueapps.lightspace.socket.MeasurementPair;
@@ -53,7 +49,7 @@ import io.blueapps.lightspace.socket.MeasurementSender;
  * 
  *
  */
-public class PHHomeActivity extends Activity implements OnItemClickListener {
+public class GameActivity extends Activity implements OnItemClickListener {
 
     public static final String KEY_MODE = "mode";
 
@@ -82,7 +78,6 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bridgelistlinear);
-
 
 
         if (getIntent().getExtras() != null)
@@ -233,13 +228,13 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
         public void onAuthenticationRequired(PHAccessPoint accessPoint) {
             Log.w(TAG, "Authentication Required.");
             phHueSDK.startPushlinkAuthentication(accessPoint);
-            startActivity(new Intent(PHHomeActivity.this, PHPushlinkActivity.class));
+            startActivity(new Intent(GameActivity.this, PHPushlinkActivity.class));
            
         }
 
         @Override
         public void onConnectionResumed(PHBridge bridge) {
-            if (PHHomeActivity.this.isFinishing())
+            if (GameActivity.this.isFinishing())
                 return;
             
             Log.v(TAG, "onConnectionResumed" + bridge.getResourceCache().getBridgeConfiguration().getIpAddress());
@@ -274,10 +269,10 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
             else if (code == PHHueError.BRIDGE_NOT_RESPONDING) {
                 Log.w(TAG, "Bridge Not Responding . . . ");
                 PHWizardAlertDialog.getInstance().closeProgressDialog();
-                PHHomeActivity.this.runOnUiThread(new Runnable() {
+                GameActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        PHWizardAlertDialog.showErrorDialog(PHHomeActivity.this, message, R.string.btn_ok);
+                        PHWizardAlertDialog.showErrorDialog(GameActivity.this, message, R.string.btn_ok);
                     }
                 }); 
 
@@ -292,10 +287,10 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
                 }
                 else {
                     PHWizardAlertDialog.getInstance().closeProgressDialog();
-                    PHHomeActivity.this.runOnUiThread(new Runnable() {
+                    GameActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            PHWizardAlertDialog.showErrorDialog(PHHomeActivity.this, message, R.string.btn_ok);
+                            PHWizardAlertDialog.showErrorDialog(GameActivity.this, message, R.string.btn_ok);
                         }
                     });  
                 }
@@ -357,12 +352,12 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
                 phHueSDK.disconnect(connectedBridge);
             }
         }
-        PHWizardAlertDialog.getInstance().showProgressDialog(R.string.connecting, PHHomeActivity.this);
+        PHWizardAlertDialog.getInstance().showProgressDialog(R.string.connecting, GameActivity.this);
         phHueSDK.connect(accessPoint);  
     }
     
     public void doBridgeSearch() {
-        PHWizardAlertDialog.getInstance().showProgressDialog(R.string.search_progress, PHHomeActivity.this);
+        PHWizardAlertDialog.getInstance().showProgressDialog(R.string.search_progress, GameActivity.this);
         PHBridgeSearchManager sm = (PHBridgeSearchManager) phHueSDK.getSDKService(PHHueSDK.SEARCH_BRIDGE);
         // Start the UPNP Searching of local bridges.
         sm.search(true, true);

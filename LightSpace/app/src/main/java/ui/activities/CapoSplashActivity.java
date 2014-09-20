@@ -13,7 +13,7 @@ import android.view.ViewTreeObserver;
 import com.http.GameRESTfulService;
 import com.http.data.DeviceAddress;
 import com.http.data.Game;
-import com.philips.lighting.quickstart.PHHomeActivity;
+import com.philips.lighting.quickstart.GameActivity;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -126,8 +126,8 @@ public class CapoSplashActivity extends Activity {
         gameService.createGame("game01", new Callback<Game>() {
             @Override
             public void success(Game game, Response response) {
-                Intent inte = new Intent(CapoSplashActivity.this, PHHomeActivity.class);
-                inte.putExtra(PHHomeActivity.KEY_MODE, PHHomeActivity.MODE_HOST);
+                Intent inte = new Intent(CapoSplashActivity.this, GameActivity.class);
+                inte.putExtra(GameActivity.KEY_MODE, GameActivity.MODE_HOST);
                 startActivity(inte);
             }
 
@@ -144,8 +144,8 @@ public class CapoSplashActivity extends Activity {
         gameService.joinGame("game01", new Callback<Game>() {
             @Override
             public void success(Game game, Response response) {
-                Intent inte = new Intent(CapoSplashActivity.this, PHHomeActivity.class);
-                inte.putExtra(PHHomeActivity.KEY_MODE, PHHomeActivity.MODE_JOIN);
+                Intent inte = new Intent(CapoSplashActivity.this, GameActivity.class);
+                inte.putExtra(GameActivity.KEY_MODE, GameActivity.MODE_JOIN);
                 startActivity(inte);
             }
 
