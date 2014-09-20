@@ -100,12 +100,7 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorSelect
     }
 
     public void onColorSelected(int color) {
-        int r = (color >> 16) & 0xFF;
-        int g = (color >> 8) & 0xFF;
-        int b = (color >> 0) & 0xFF;
-
-        Log.d("colorpicker", "color= " + color + ", r=" + r + " g=" + g + " b= " + b);
-        setHueColor(r, g, b);
+        setHueColor(color);
     }
 
     @Override
@@ -313,10 +308,9 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorSelect
                         Log.d("color changes", "set color: " + color);
                         Log.d("color changes", "color= " + color + ", r=" + red + " g=" + green + " b= " + blue);
                         picker.setColor(color);
-                        picker.setNewCenterColor(color);
                         picker.setShowOldCenterColor(false);
 
-                        setHueColor(red, green, blue);
+                        setHueColor(color);
                     }
                 }
             });
@@ -326,6 +320,15 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorSelect
     static class ViewHolder {
         TextView deviceName;
         TextView deviceAddress;
+    }
+
+    public void setHueColor(int color) {
+        int r = (color >> 16) & 0xFF;
+        int g = (color >> 8) & 0xFF;
+        int b = (color >> 0) & 0xFF;
+
+        Log.d("colorpicker", "color= " + color + ", r=" + r + " g=" + g + " b= " + b);
+        setHueColor(r, g, b);
     }
 
     public void setHueColor(int r, int g, int b) {
