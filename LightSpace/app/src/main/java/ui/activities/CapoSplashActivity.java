@@ -107,6 +107,7 @@ public class CapoSplashActivity extends Activity {
       public void onStartGameClick(View v)
      {
          Intent inte = new Intent(this, PHHomeActivity.class);
+         inte.putExtra(PHHomeActivity.KEY_MODE, PHHomeActivity.MODE_HOST);
          startActivity(inte);
 
     }
@@ -114,6 +115,8 @@ public class CapoSplashActivity extends Activity {
     @OnClick(R.id.joingame_button)
     public void onJoinGameClick(View v)
     {
-
+        Intent inte = new Intent(this, PHHomeActivity.class);
+        inte.putExtra(PHHomeActivity.KEY_MODE, PHHomeActivity.MODE_JOIN);
+        startActivity(inte);
     }
 }

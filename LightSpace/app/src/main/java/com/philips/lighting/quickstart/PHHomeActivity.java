@@ -43,6 +43,13 @@ import io.blueapps.lightspace.R;
  */
 public class PHHomeActivity extends Activity implements OnItemClickListener {
 
+    public static final String KEY_MODE = "mode";
+
+    public static final int MODE_JOIN = 0;
+    public static final int MODE_HOST = 1;
+
+    private int mode = MODE_JOIN;
+
     private PHHueSDK phHueSDK;
     public static final String TAG = "QuickStart";
     private HueSharedPreferences prefs;
@@ -54,7 +61,12 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bridgelistlinear);
-        
+
+        if (getIntent().getExtras() != null)
+        {
+            this.mode = getIntent().getIntExtra(KEY_MODE,MODE_JOIN);
+        }
+
         // Gets an instance of the Hue SDK.
         phHueSDK = PHHueSDK.create();
         
@@ -118,9 +130,7 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
                             adapter.updateData(phHueSDK.getAccessPointsFound());
                        }
                    });
-                   
-            } 
-            
+            }
         }
         
         @Override
