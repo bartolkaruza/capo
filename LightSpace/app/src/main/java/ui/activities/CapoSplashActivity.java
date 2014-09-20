@@ -27,6 +27,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import io.blueapps.lightspace.BuildConfig;
 import io.blueapps.lightspace.ColorActivity;
+import io.blueapps.lightspace.DiscoActivity;
 import io.blueapps.lightspace.R;
 import io.blueapps.lightspace.bleutooth.DeviceScanActivity;
 import retrofit.Callback;
@@ -184,6 +185,12 @@ public class CapoSplashActivity extends Activity {
     @OnClick(R.id.device_color)
     public void onDeviceColorButtonClick(View v) {
         Intent inte = new Intent(this, ColorActivity.class);
+        startActivity(inte);
+    }
+
+    @OnClick(R.id.device_disco)
+    public void onDeviceDisco(View v) {
+        Intent inte = new Intent(this, DiscoActivity.class);
         startActivity(inte);
     }
 
