@@ -48,5 +48,6 @@
     <string name="menu_stop">Stop</string>
     <string name="title_activity_capo_splash">CapoSplashActivity</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_capo_choose_game">CapoChooseGameActivity</string>
 
 </resources>
