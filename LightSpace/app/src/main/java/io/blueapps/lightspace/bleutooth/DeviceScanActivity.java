@@ -37,13 +37,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.http.GameRESTful;
-import com.http.GameRequest;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.blueapps.lightspace.R;
-import retrofit.RestAdapter;
 
 /**
  * Activity for scanning and displaying available Bluetooth LE devices.
@@ -82,25 +80,6 @@ public class DeviceScanActivity extends ListActivity {
             finish();
             return;
         }
-
-        initGameRESTfulService();
-
-        new Thread() {
-            @Override
-            public void run() {
-                String game01 = service.createGame(new GameRequest("game01", "my device ID"));
-                System.out.println("game:" + game01);
-            }
-        }.start();
-
-    }
-
-    private void initGameRESTfulService() {
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(GameRESTful.END_POINT)
-                .build();
-
-        service = restAdapter.create(GameRESTful.class);
     }
 
     @Override
