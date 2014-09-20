@@ -24,7 +24,11 @@ import android.widget.Toast;
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.larswerkman.holocolorpicker.OpacityBar;
 import com.larswerkman.holocolorpicker.SVBar;
+import com.philips.lighting.hue.sdk.PHHueSDK;
 import com.philips.lighting.hue.sdk.utilities.PHUtilities;
+import com.philips.lighting.model.PHBridge;
+import com.philips.lighting.model.PHLight;
+import com.philips.lighting.model.PHLightState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +36,8 @@ import java.util.List;
 import io.blueapps.lightspace.bleutooth.MyBluetoothDevice;
 
 public class ColorActivity extends Activity implements ColorPicker.OnColorChangedListener {
+
+    private PHHueSDK phHueSDK;
 
     private LeDeviceListAdapter mLeDeviceListAdapter;
     private BluetoothAdapter mBluetoothAdapter;
@@ -51,6 +57,7 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorChange
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_color);
+        phHueSDK = PHHueSDK.create();
 
         picker = (ColorPicker) findViewById(R.id.picker);
         svBar = (SVBar) findViewById(R.id.svbar);
@@ -300,6 +307,8 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorChange
                     picker.changeValueBarColor(color);
                     picker.changeOpacityBarColor(color);
                     picker.changeSaturationBarColor(color);
+
+                    setHueColor(color);
                 }
             });
         }
@@ -310,4 +319,32 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorChange
         TextView deviceAddress;
     }
 
+    public void setHueColor(int color) {
+        PHBridge bridge = phHueSDK.getSelectedBridge();
+        if (bridge != null) {
+            List<PHLight> allLights = bridge.getResourceCache().getAllLights();
+
+            for (PHLight light : allLights) {
+                float xy[] = PHUtilities.calculateXY(color, "");
+                PHLightState lightState = new PHLightState();
+                lightState.setX(xy[0]);
+                lightState.setY(xy[1]);
+
+                // lightState.setHue(rand.nextInt(MAX_HUE));
+                // To validate your lightstate is valid (before sending to the bridge) you can use:
+                // String validState = lightState.validateState();
+                // bridge.updateLightState(light, lightState, listener);
+                bridge.updateLightState(light, lightState); // If no bridge response is required then use this simpler form.
+            }
+        }
+        else {
+            Toast.makeText(this, "No Philips HUE bridge connected", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        phHueSDK.disableAllHeartbeat();
+    }
 }
