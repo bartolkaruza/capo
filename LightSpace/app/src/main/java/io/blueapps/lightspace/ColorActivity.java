@@ -298,17 +298,21 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorChange
                 @Override
                 public void run() {
                     mLeDeviceListAdapter.addDevice(new MyBluetoothDevice(device, rssi));
-                    mLeDeviceListAdapter.notifyDataSetChanged();
-                    int color = Color.argb(255, 255 - rssi, 255 - rssi, 255 - rssi);
-                    Log.d("colorpicker", "set color: " + color);
-                    picker.setColor(color);
-                    picker.setNewCenterColor(color);
-                    picker.setShowOldCenterColor(false);
-                    picker.changeValueBarColor(color);
-                    picker.changeOpacityBarColor(color);
-                    picker.changeSaturationBarColor(color);
+                    // mLeDeviceListAdapter.notifyDataSetChanged();
+                    boolean isPlayer = true;
 
-                    setHueColor(color);
+                    if (isPlayer) {
+                        int color = Color.argb(255, 255 - rssi, 255 - rssi, 255 - rssi);
+                        Log.d("colorpicker", "set color: " + color);
+                        picker.setColor(color);
+                        picker.setNewCenterColor(color);
+                        picker.setShowOldCenterColor(false);
+                        picker.changeValueBarColor(color);
+                        picker.changeOpacityBarColor(color);
+                        picker.changeSaturationBarColor(color);
+
+                        setHueColor(color);
+                    }
                 }
             });
         }

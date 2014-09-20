@@ -30,8 +30,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.ParcelUuid;
 import android.util.Log;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
 
@@ -56,7 +58,7 @@ public class BluetoothLeService extends Service {
     public final static String ACTION_GATT_SERVICES_DISCOVERED = "com.example.bluetooth.le.ACTION_GATT_SERVICES_DISCOVERED";
     public final static String ACTION_DATA_AVAILABLE = "com.example.bluetooth.le.ACTION_DATA_AVAILABLE";
     public final static String EXTRA_DATA = "com.example.bluetooth.le.EXTRA_DATA";
-
+    public static String MY_UUID;
     public final static UUID UUID_HEART_RATE_MEASUREMENT = UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT);
 
     // Implements callback methods for GATT events that the app cares about. For example,
@@ -215,6 +217,16 @@ public class BluetoothLeService extends Service {
             else {
                 return false;
             }
+        }
+
+        try {
+            Method getUUIDsMethod = BluetoothAdapter.class.getDeclaredMethod("getUuids", null);
+            ParcelUuid[] dUUIDs = (ParcelUuid[]) getUUIDsMethod.invoke(mBluetoothAdapter, null);
+
+            MY_UUID = dUUIDs[0].getUuid().toString();
+        }
+        catch (Exception e) {
+
         }
 
         final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
