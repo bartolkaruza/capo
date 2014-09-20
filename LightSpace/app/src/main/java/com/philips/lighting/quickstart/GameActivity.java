@@ -13,8 +13,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 
 import com.http.GameRESTfulService;
 import com.http.data.DeviceAddress;
@@ -89,8 +91,9 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
     @InjectView(R.id.gameView)
     protected View gameView;
 
-    // TODO fix deviceAddress
-    DeviceAddress address = new DeviceAddress("");
+    @InjectView(R.id.bridge_list)
+    protected ListView bridgeList;
+
     GameRESTfulService gameService;
 
     @Override
@@ -98,7 +101,6 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bridgelistlinear);
         ButterKnife.inject(this);
-
 
         if (getIntent().getExtras() != null) {
             this.mode = getIntent().getIntExtra(KEY_MODE, MODE_JOIN);
@@ -125,6 +127,9 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
     }
 
     private boolean initBLE() {
+
+        adapter = new AccessPointListAdapter(getApplicationContext(),new ArrayList<PHAccessPoint>());
+        bridgeList.setAdapter(adapter);
 
         Log.d("API", "initBLE");
         // Initializes a Bluetooth adapter. For API level 18 and above, get a reference to
@@ -305,7 +310,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
                 }
                 else {
                     PHWizardAlertDialog.getInstance().closeProgressDialog();
-                    Crouton.makeText(GameActivity.this,message,Style.ALERT);
+                    Crouton.makeText(GameActivity.this, message, Style.ALERT);
                 }
 
             }
@@ -424,6 +429,15 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
     public void success(Game game, Response response) {
         if (game != null) {
             Log.d("GAME","ready");
+            this.gameView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    gameView.getViewTreeObserver().removeOnPreDrawListener(this);
+                    gameView.setAlpha(0);
+                    gameView.animate().alpha(1).setDuration(1000).start();
+                    return true;
+                }
+            });
             this.gameView.setBackgroundColor(Color.parseColor(game.getTargetColor()));
         }
     }
