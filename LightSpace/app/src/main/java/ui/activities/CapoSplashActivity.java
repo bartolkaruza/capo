@@ -1,6 +1,7 @@
 package ui.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import io.blueapps.lightspace.ColorActivity;
+import io.blueapps.lightspace.LightSpaceActivity;
 import io.blueapps.lightspace.R;
 
 public class CapoSplashActivity extends Activity {
@@ -104,6 +107,8 @@ public class CapoSplashActivity extends Activity {
      @OnClick(R.id.startgame_button)
       public void onStartGameClick(View v)
      {
+         Intent inte = new Intent(this, ColorActivity.class);
+         startActivity(inte);
 
     }
 
