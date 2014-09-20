@@ -39,7 +39,7 @@ public class MyBluetoothDevice {
 
         MyBluetoothDevice that = (MyBluetoothDevice) o;
 
-        if (device != null ? !device.equals(that.device) : that.device != null)
+        if (device != null ? !device.getAddress().equals(that.device.getAddress()) : that.device != null)
             return false;
 
         return true;
@@ -48,7 +48,6 @@ public class MyBluetoothDevice {
     @Override
     public int hashCode() {
         int result = device != null ? device.hashCode() : 0;
-        result = 31 * result + rssi;
         return result;
     }
 }

@@ -204,6 +204,19 @@ public class DeviceScanActivity extends ListActivity {
                     }
                 }
             }
+
+            int i = averageOut();
+            i = Math.abs(i);
+        }
+
+        public int averageOut() {
+            int sum = 0;
+
+            for (MyBluetoothDevice device : mLeDevices) {
+                sum += device.getRssi();
+            }
+
+            return mLeDevices.size() > 0 ? sum / mLeDevices.size() : sum;
         }
 
         public MyBluetoothDevice getDevice(int position) {
