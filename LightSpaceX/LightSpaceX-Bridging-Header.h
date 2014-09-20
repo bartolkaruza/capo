@@ -14,4 +14,6 @@
 #import "PHBridgePushLinkViewController.h"
 #import "PHBridgeSelectionViewController.h"
 
+#import "SIOSocket.h"
+
 #endif

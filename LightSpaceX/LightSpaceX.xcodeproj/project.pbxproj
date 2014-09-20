@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BA34B76D19CDE7210081FB5A /* SIOSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = BA34B76B19CDE7210081FB5A /* SIOSocket.m */; };
 		BA8B015919CD97B2001EEC53 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8B015819CD97B2001EEC53 /* AppDelegate.swift */; };
 		BA8B015B19CD97B2001EEC53 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = BA8B015A19CD97B2001EEC53 /* GameScene.sks */; };
 		BA8B015D19CD97B2001EEC53 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8B015C19CD97B2001EEC53 /* GameScene.swift */; };
@@ -34,6 +35,7 @@
 		BA8B01AD19CDA415001EEC53 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA8B01AC19CDA415001EEC53 /* CoreBluetooth.framework */; };
 		BA8B01AF19CDA451001EEC53 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA8B01AE19CDA451001EEC53 /* SpriteKit.framework */; };
 		BA8B01B119CDA45C001EEC53 /* SceneKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA8B01B019CDA45C001EEC53 /* SceneKit.framework */; };
+		BA8B01B319CDAFC7001EEC53 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA8B01B219CDAFC7001EEC53 /* CoreMotion.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +49,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		BA34B76A19CDE7210081FB5A /* SIOSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SIOSocket.h; path = SIOSocket/SIOSocket.h; sourceTree = "<group>"; };
+		BA34B76B19CDE7210081FB5A /* SIOSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SIOSocket.m; path = SIOSocket/SIOSocket.m; sourceTree = "<group>"; };
+		BA34B76C19CDE7210081FB5A /* socket.io.js.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = socket.io.js.h; path = SIOSocket/socket.io.js.h; sourceTree = "<group>"; };
 		BA8B015319CD97B2001EEC53 /* LightSpaceX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LightSpaceX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA8B015719CD97B2001EEC53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BA8B015819CD97B2001EEC53 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -89,6 +94,7 @@
 		BA8B01AC19CDA415001EEC53 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		BA8B01AE19CDA451001EEC53 /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
 		BA8B01B019CDA45C001EEC53 /* SceneKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SceneKit.framework; path = System/Library/Frameworks/SceneKit.framework; sourceTree = SDKROOT; };
+		BA8B01B219CDAFC7001EEC53 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +102,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA8B01B319CDAFC7001EEC53 /* CoreMotion.framework in Frameworks */,
 				BA8B01B119CDA45C001EEC53 /* SceneKit.framework in Frameworks */,
 				BA8B01AF19CDA451001EEC53 /* SpriteKit.framework in Frameworks */,
 				BA8B01AD19CDA415001EEC53 /* CoreBluetooth.framework in Frameworks */,
@@ -113,15 +120,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BA34B76E19CDE7290081FB5A /* SIOSocket */ = {
+			isa = PBXGroup;
+			children = (
+				BA34B76A19CDE7210081FB5A /* SIOSocket.h */,
+				BA34B76B19CDE7210081FB5A /* SIOSocket.m */,
+				BA34B76C19CDE7210081FB5A /* socket.io.js.h */,
+			);
+			name = SIOSocket;
+			sourceTree = "<group>";
+		};
 		BA8B014A19CD97B2001EEC53 = {
 			isa = PBXGroup;
 			children = (
+				BA8B01B219CDAFC7001EEC53 /* CoreMotion.framework */,
 				BA8B01B019CDA45C001EEC53 /* SceneKit.framework */,
 				BA8B01AE19CDA451001EEC53 /* SpriteKit.framework */,
 				BA8B01AC19CDA415001EEC53 /* CoreBluetooth.framework */,
 				BA8B017C19CD9858001EEC53 /* HueSDK_iOS.framework */,
 				BA8B019619CD9A6F001EEC53 /* SDKWizard */,
 				BA8B017D19CD9858001EEC53 /* Lumberjack */,
+				BA34B76E19CDE7290081FB5A /* SIOSocket */,
 				BA8B015519CD97B2001EEC53 /* LightSpaceX */,
 				BA8B016F19CD97B3001EEC53 /* LightSpaceXTests */,
 				BA8B015419CD97B2001EEC53 /* Products */,
@@ -355,6 +374,7 @@
 				BA8B019419CD9859001EEC53 /* DispatchQueueLogFormatter.m in Sources */,
 				BA8B018E19CD9859001EEC53 /* DDAbstractDatabaseLogger.m in Sources */,
 				BA8B015919CD97B2001EEC53 /* AppDelegate.swift in Sources */,
+				BA34B76D19CDE7210081FB5A /* SIOSocket.m in Sources */,
 				BA8B018F19CD9859001EEC53 /* DDASLLogger.m in Sources */,
 				BA8B019319CD9859001EEC53 /* ContextFilterLogFormatter.m in Sources */,
 				BA8B01A619CD9A6F001EEC53 /* PHBridgePushLinkViewController.m in Sources */,
@@ -567,6 +587,7 @@
 				BA8B017819CD97B3001EEC53 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		BA8B017919CD97B3001EEC53 /* Build configuration list for PBXNativeTarget "LightSpaceXTests" */ = {
 			isa = XCConfigurationList;
@@ -575,6 +596,7 @@
 				BA8B017B19CD97B3001EEC53 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
