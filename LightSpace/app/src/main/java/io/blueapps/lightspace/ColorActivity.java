@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,10 +46,11 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorSelect
     // Stops scanning after 10 seconds.
     private static final long SCAN_PERIOD = 100000;
     private ColorPicker picker;
+
     // private SVBar svBar;
     // private OpacityBar opacityBar;
-    private Button button;
-    private TextView text;
+    // private Button button;
+    // private TextView text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,19 +63,19 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorSelect
         // opacityBar = (OpacityBar) findViewById(R.id.opacitybar);
         // picker.addSVBar(svBar);
         // picker.addOpacityBar(opacityBar);
-        button = (Button) findViewById(R.id.button1);
-        text = (TextView) findViewById(R.id.textView1);
+        // button = (Button) findViewById(R.id.button1);
+        // text = (TextView) findViewById(R.id.textView1);
+        //
+        // button.setOnClickListener(new View.OnClickListener() {
+        //
+        // @Override
+        // public void onClick(View v) {
+        // text.setTextColor(picker.getColor());
+        // picker.setOldCenterColor(picker.getColor());
+        // }
+        // });
 
         picker.setOnColorSelectedListener(this);
-
-        button.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                text.setTextColor(picker.getColor());
-                picker.setOldCenterColor(picker.getColor());
-            }
-        });
 
         mHandler = new Handler();
 
@@ -100,12 +100,7 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorSelect
     }
 
     public void onColorSelected(int color) {
-        int r = (color >> 16) & 0xFF;
-        int g = (color >> 8) & 0xFF;
-        int b = (color >> 0) & 0xFF;
-
-        Log.d("colorpicker", "color= " + color + ", r=" + r + " g=" + g + " b= " + b);
-        setHueColor(r, g, b);
+        setHueColor(color);
     }
 
     @Override
@@ -304,21 +299,18 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorSelect
                     if (isPlayer) {
                         Random rand = new Random();
 
-                        int red = 255 + rssi - rand.nextInt(100);
-                        int green = 255 + rssi - rand.nextInt(100);
-                        int blue = 255 + rssi - rand.nextInt(100);
+                        int i = 255 + rssi;
+                        int red = i - rand.nextInt(i);
+                        int green = i - rand.nextInt(i);
+                        int blue = i - rand.nextInt(i);
 
-                        int color = Color.argb(255, red, green, blue);
+                        int color = -Color.argb(0, red, green, blue);
                         Log.d("color changes", "set color: " + color);
                         Log.d("color changes", "color= " + color + ", r=" + red + " g=" + green + " b= " + blue);
                         picker.setColor(color);
-                        picker.setNewCenterColor(color);
-
                         picker.setShowOldCenterColor(false);
-                        // picker.changeOpacityBarColor(0);
-                        // picker.changeSaturationBarColor(255);
 
-                        setHueColor(red, green, blue);
+                        setHueColor(color);
                     }
                 }
             });
@@ -328,6 +320,15 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorSelect
     static class ViewHolder {
         TextView deviceName;
         TextView deviceAddress;
+    }
+
+    public void setHueColor(int color) {
+        int r = (color >> 16) & 0xFF;
+        int g = (color >> 8) & 0xFF;
+        int b = (color >> 0) & 0xFF;
+
+        Log.d("colorpicker", "color= " + color + ", r=" + r + " g=" + g + " b= " + b);
+        setHueColor(r, g, b);
     }
 
     public void setHueColor(int r, int g, int b) {
