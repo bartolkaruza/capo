@@ -67,7 +67,7 @@ public class BluetoothHost extends Activity {
         setContentView(R.layout.activity_main);
         uuids[0] = UUID.fromString(uuid1);
         uuids[1] = UUID.fromString(uuid2);
-        connectedDevices = (TextView) findViewById(R.id.connected_devices_values);
+        connectedDevices = (TextView) findViewById(R.id.textView1);
         handle = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
