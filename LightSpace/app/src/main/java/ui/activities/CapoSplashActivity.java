@@ -1,10 +1,15 @@
 package ui.activities;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.ParcelUuid;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +19,8 @@ import com.http.GameRESTfulService;
 import com.http.data.DeviceAddress;
 import com.http.data.Game;
 import com.philips.lighting.quickstart.GameActivity;
+
+import java.lang.reflect.Method;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -39,13 +46,15 @@ public class CapoSplashActivity extends Activity {
     View deviceButton;
 
     // TODO fix deviceAddress
-    DeviceAddress address = new DeviceAddress("");
+    public static DeviceAddress address;
     GameRESTfulService gameService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capo_splash);
+        setUpDeviceAddress();
+
         gameService = GameRESTfulService.getInstance(address);
         content = findViewById(android.R.id.content);
 
@@ -161,5 +170,21 @@ public class CapoSplashActivity extends Activity {
     public void onDeviceButtonClick(View v) {
         Intent inte = new Intent(this, DeviceScanActivity.class);
         startActivity(inte);
+    }
+
+    public void setUpDeviceAddress() {
+        try {
+
+            BluetoothManager mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+            BluetoothAdapter mBluetoothAdapter = mBluetoothManager.getAdapter();
+
+            Method getUUIDsMethod = BluetoothAdapter.class.getDeclaredMethod("getUuids");
+            ParcelUuid[] dUUIDs = (ParcelUuid[]) getUUIDsMethod.invoke(mBluetoothAdapter, null);
+
+            address = new DeviceAddress(dUUIDs[0].getUuid().toString());
+        }
+        catch (Exception e) {
+            Log.e("BLEService", e.getMessage());
+        }
     }
 }
