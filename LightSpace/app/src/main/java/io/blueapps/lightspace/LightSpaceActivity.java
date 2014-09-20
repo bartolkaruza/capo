@@ -13,7 +13,7 @@ public class LightSpaceActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_light_space_activitiy);
     }
-
+;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
