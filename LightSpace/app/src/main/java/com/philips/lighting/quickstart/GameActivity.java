@@ -99,6 +99,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setActivityBackgroundColor(Color.WHITE);
         setContentView(R.layout.bridgelistlinear);
         ButterKnife.inject(this);
 
@@ -118,6 +119,11 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
         if (this.mode == MODE_HOST) {
             initHUEAPI();
         }
+    }
+
+    public void setActivityBackgroundColor(int color) {
+        View view = this.getWindow().getDecorView();
+        view.setBackgroundColor(color);
     }
 
     private void initSockets() {
