@@ -13,6 +13,7 @@ philipshue303
 
 00:17:88:17:16:3b
 
+[api server](http://bartolkaruza-measure-app.nodejitsu.com/game)
 
 PUT game/create
 ```
