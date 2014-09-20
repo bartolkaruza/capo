@@ -39,6 +39,35 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorSelect
         setHueColor(r, g, b);
     }
 
+    public void setHueDiscoColor(int... colors) {
+        PHBridge bridge = phHueSDK.getSelectedBridge();
+
+        if (bridge != null) {
+            List<PHLight> allLights = bridge.getResourceCache().getAllLights();
+            int i = 0;
+            for (PHLight light : allLights) {
+                int r = (colors[i] >> 16) & 0xFF;
+                int g = (colors[i] >> 8) & 0xFF;
+                int b = (colors[i] >> 0) & 0xFF;
+
+                float xy[] = PHUtilities.calculateXYFromRGB(r, g, b, light.getModelNumber());
+                PHLightState lightState = new PHLightState();
+                lightState.setX(xy[0]);
+                lightState.setY(xy[1]);
+                lightState.setAlertMode(PHLight.PHLightAlertMode.ALERT_SELECT);
+                lightState.setColorMode(PHLight.PHLightColorMode.COLORMODE_XY);
+                lightState.setBrightness(50);
+
+                // lightState.setHue(rand.nextInt(MAX_HUE));
+                // To validate your lightstate is valid (before sending to the bridge) you can use:
+                // String validState = lightState.validateState();
+                // bridge.updateLightState(light, lightState, listener);
+                bridge.updateLightState(light, lightState); // If no bridge response is required then use this simpler form.
+                i++;
+            }
+        }
+    }
+
     public void setHueColor(int r, int g, int b) {
         Log.d("colorpicker", "r=" + r + " g=" + g + " b= " + b);
 
