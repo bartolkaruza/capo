@@ -2,7 +2,7 @@
   "name": "measure-app",
   "description": "measure-app",
   "private": true,
-  "version": "1.0.0-19",
+  "version": "1.0.0-20",
   "main": "app.js",
   "scripts": {
     "start": "node app"
