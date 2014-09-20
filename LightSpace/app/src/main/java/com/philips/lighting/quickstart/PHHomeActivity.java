@@ -1,9 +1,14 @@
 package com.philips.lighting.quickstart;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.philips.lighting.data.AccessPointListAdapter;
 import com.philips.lighting.data.HueSharedPreferences;
@@ -23,10 +29,15 @@ import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.model.PHHueError;
 import com.philips.lighting.model.PHHueParsingError;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 import io.blueapps.lightspace.ColorActivity;
 import io.blueapps.lightspace.R;
+import io.blueapps.lightspace.bleutooth.MyBluetoothDevice;
+import io.blueapps.lightspace.socket.MeasurementPair;
 import io.blueapps.lightspace.socket.MeasurementSender;
 
 /**
@@ -49,6 +60,8 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
     public static final int MODE_JOIN = 0;
     public static final int MODE_HOST = 1;
 
+    private static final long SCAN_PERIOD = 100000;
+
     private int mode = MODE_JOIN;
 
     private PHHueSDK phHueSDK;
@@ -57,6 +70,10 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
     private AccessPointListAdapter adapter;
 
     private MeasurementSender rssiSender;
+    private BluetoothAdapter mBluetoothAdapter;
+
+    private Handler mHandler;
+    private boolean mScanning = false;
     
     private boolean lastSearchWasIPScan = false;
     
@@ -70,24 +87,52 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
             this.mode = getIntent().getIntExtra(KEY_MODE,MODE_JOIN);
         }
 
-        // Gets an instance of the Hue SDK.
-        phHueSDK = PHHueSDK.create();
+        initBLE();
+        initSockets();
+        initHUEAPI();
 
-        rssiSender = new MeasurementSender();
-        rssiSender.init();
-        
-        // Set the Device Name (name of your app). This will be stored in your bridge whitelist entry.
-        phHueSDK.setDeviceName("QuickStartApp");
-        
-        // Register the PHSDKListener to receive callbacks from the bridge.
-        phHueSDK.getNotificationManager().registerSDKListener(listener);
-        
         adapter = new AccessPointListAdapter(getApplicationContext(), phHueSDK.getAccessPointsFound());
         
         ListView accessPointList = (ListView) findViewById(R.id.bridge_list);
         accessPointList.setOnItemClickListener(this);
         accessPointList.setAdapter(adapter);
         
+
+    }
+
+    private void initSockets() {
+        Log.d("API","initSockets");
+        rssiSender = new MeasurementSender();
+        rssiSender.init();
+    }
+
+    private boolean initBLE() {
+
+        Log.d("API","initBLE");
+        // Initializes a Bluetooth adapter. For API level 18 and above, get a reference to
+        // BluetoothAdapter through BluetoothManager.
+        final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
+
+        // Checks if Bluetooth is supported on the device.
+        if (mBluetoothAdapter == null) {
+            Crouton.makeText(this, R.string.error_bluetooth_not_supported, Style.ALERT).show();
+            finish();
+            return false;
+        }
+        return true;
+    }
+
+    private void initHUEAPI() {
+
+        Log.d("API","initHUE");
+        // Gets an instance of the Hue SDK.
+        phHueSDK = PHHueSDK.create();
+        // Set the Device Name (name of your app). This will be stored in your bridge whitelist entry.
+        phHueSDK.setDeviceName("QuickStartApp");
+        // Register the PHSDKListener to receive callbacks from the bridge.
+        phHueSDK.getNotificationManager().registerSDKListener(listener);
+
         // Try to automatically connect to the last known bridge.  For first time use this will be empty so a bridge search is automatically started.
         prefs = HueSharedPreferences.getInstance(getApplicationContext());
         String lastIpAddress   = prefs.getLastConnectedIPAddress();
@@ -98,10 +143,11 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
             PHAccessPoint lastAccessPoint = new PHAccessPoint();
             lastAccessPoint.setIpAddress(lastIpAddress);
             lastAccessPoint.setUsername(lastUsername);
-           
+
             if (!phHueSDK.isAccessPointConnected(lastAccessPoint)) {
-               PHWizardAlertDialog.getInstance().showProgressDialog(R.string.connecting, PHHomeActivity.this);
-               phHueSDK.connect(lastAccessPoint);
+                Crouton.makeText(this, R.string.connecting, Style.INFO).show();
+                //PHWizardAlertDialog.getInstance().showProgressDialog(R.string.connecting, this);
+                phHueSDK.connect(lastAccessPoint);
             }
         }
         else {  // First time use, so perform a bridge search.
@@ -160,7 +206,7 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
             prefs.setLastConnectedIPAddress(b.getResourceCache().getBridgeConfiguration().getIpAddress());
             prefs.setUsername(prefs.getUsername());
             PHWizardAlertDialog.getInstance().closeProgressDialog();     
-            startMainActivity();
+
         }
 
         @Override
@@ -270,7 +316,10 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
             phHueSDK.getNotificationManager().unregisterSDKListener(listener);
         }
         phHueSDK.disableAllHeartbeat();
+        Crouton.cancelAllCroutons();
     }
+
+
         
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -299,14 +348,49 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
         sm.search(true, true);
     }
 
-    // Starting the main activity this way, prevents the PushLink Activity being shown when pressing the back button.
-    public void startMainActivity() {   
-        Intent intent = new Intent(getApplicationContext(), ColorActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            intent.addFlags(0x8000); // equal to Intent.FLAG_ACTIVITY_CLEAR_TASK which is only available from API level 11
-        startActivity(intent);
+
+    // Device scan callback.
+    private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+
+        @Override
+        public void onLeScan(final BluetoothDevice device, final int rssi, byte[] scanRecord) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    MyBluetoothDevice bluetoothDevice = new MyBluetoothDevice(device, rssi);
+                    List<MeasurementPair> pairs = new ArrayList<MeasurementPair>();
+                    MeasurementPair pair = new MeasurementPair();
+                    if (bluetoothDevice != null && bluetoothDevice.getDevice() != null) {
+                        pair.setDeviceAddress(bluetoothDevice.getDevice().getAddress());
+                        pair.setDeviceAddress(bluetoothDevice.getRssi() + "");
+                    }
+                    pairs.add(pair);
+                    rssiSender.updateMeasurement(pairs);
+                }
+            });
+        }
+    };
+
+    private void scanLeDevice(final boolean enable) {
+        if (enable) {
+            // Stops scanning after a pre-defined scan period.
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mScanning = false;
+                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                    invalidateOptionsMenu();
+                }
+            }, SCAN_PERIOD);
+
+            mScanning = true;
+            mBluetoothAdapter.startLeScan(mLeScanCallback);
+        }
+        else {
+            mScanning = false;
+            mBluetoothAdapter.stopLeScan(mLeScanCallback);
+        }
+        invalidateOptionsMenu();
     }
     
 }
