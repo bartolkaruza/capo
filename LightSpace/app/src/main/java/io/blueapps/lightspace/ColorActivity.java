@@ -168,21 +168,6 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorSelect
         mLeDeviceListAdapter.clear();
     }
 
-    // @Override
-    // protected void onListItemClick(ListView l, View v, int position, long id) {
-    // final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position).getDevice();
-    // if (device == null)
-    // return;
-    // final Intent intent = new Intent(this, DeviceControlActivity.class);
-    // intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.getName());
-    // intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
-    // if (mScanning) {
-    // mBluetoothAdapter.stopLeScan(mLeScanCallback);
-    // mScanning = false;
-    // }
-    // startActivity(intent);
-    // }
-
     private void scanLeDevice(final boolean enable) {
         if (enable) {
             // Stops scanning after a pre-defined scan period.
@@ -216,9 +201,10 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorSelect
             mInflator = ColorActivity.this.getLayoutInflater();
         }
 
-        public void addDevice(MyBluetoothDevice device) {
+        public boolean addDevice(MyBluetoothDevice device) {
             if (!mLeDevices.contains(device)) {
                 mLeDevices.add(device);
+                return Boolean.TRUE;
             }
             else {
                 for (MyBluetoothDevice dev : mLeDevices) {
@@ -227,6 +213,8 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorSelect
                     }
                 }
             }
+
+            return Boolean.FALSE;
         }
 
         public MyBluetoothDevice getDevice(int position) {
@@ -292,11 +280,9 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorSelect
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mLeDeviceListAdapter.addDevice(new MyBluetoothDevice(device, rssi));
-                    // mLeDeviceListAdapter.notifyDataSetChanged();
-                    boolean isPlayer = true;
+                    boolean deviceAdded = mLeDeviceListAdapter.addDevice(new MyBluetoothDevice(device, rssi));
 
-                    if (isPlayer) {
+                    if (deviceAdded) {
                         Random rand = new Random();
 
                         int i = 255 + rssi;
@@ -304,7 +290,7 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorSelect
                         int green = i - rand.nextInt(i);
                         int blue = i - rand.nextInt(i);
 
-                        int color = -Color.argb(0, red, green, blue);
+                        int color = -Color.argb(255, red, green, blue);
 
                         picker.setColor(color);
                         picker.setShowOldCenterColor(false);
@@ -346,6 +332,9 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorSelect
                     PHLightState lightState = new PHLightState();
                     lightState.setX(xy[0]);
                     lightState.setY(xy[1]);
+                    lightState.setAlertMode(PHLight.PHLightAlertMode.ALERT_SELECT);
+                    lightState.setColorMode(PHLight.PHLightColorMode.COLORMODE_XY);
+                    lightState.setBrightness(50);
 
                     // lightState.setHue(rand.nextInt(MAX_HUE));
                     // To validate your lightstate is valid (before sending to the bridge) you can use:
