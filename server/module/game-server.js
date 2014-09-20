@@ -10,7 +10,7 @@ exports.init = function(socketIo) {
             console.log(message);
         });
         socket.on('measurement', function (measurement) {
-            socket.broadcast.emit('measurement', measurement);
+            socket.broadcast.emit('update', {currentColor:"afrdbn", targetColor:"afrdbn"});
         });
     });
 
