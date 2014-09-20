@@ -41,38 +41,16 @@ public class ColorActivity extends Activity implements ColorPicker.OnColorSelect
     private Handler mHandler;
 
     private static final int REQUEST_ENABLE_BT = 1;
-    // Stops scanning after 10 seconds.
-    private static final long SCAN_PERIOD = 100000;
+    // Stops scanning after 1000 seconds.
+    private static final long SCAN_PERIOD = 1000000;
     private ColorPicker picker;
-
-    // private SVBar svBar;
-    // private OpacityBar opacityBar;
-    // private Button button;
-    // private TextView text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_color);
         phHueSDK = PHHueSDK.create();
-
         picker = (ColorPicker) findViewById(R.id.picker);
-        // svBar = (SVBar) findViewById(R.id.svbar);
-        // opacityBar = (OpacityBar) findViewById(R.id.opacitybar);
-        // picker.addSVBar(svBar);
-        // picker.addOpacityBar(opacityBar);
-        // button = (Button) findViewById(R.id.button1);
-        // text = (TextView) findViewById(R.id.textView1);
-        //
-        // button.setOnClickListener(new View.OnClickListener() {
-        //
-        // @Override
-        // public void onClick(View v) {
-        // text.setTextColor(picker.getColor());
-        // picker.setOldCenterColor(picker.getColor());
-        // }
-        // });
-
         picker.setOnColorSelectedListener(this);
 
         mHandler = new Handler();
