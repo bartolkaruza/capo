@@ -51,7 +51,8 @@ game/game01/02-BB-02-BB/update
 Request:
 ```
 {
-    [
+    "deviceId": "01-AA-01-AA",
+    "values": [
         {
             "deviceAddress" : "01-AA-01-AA",
             "rssi" : "-82"
