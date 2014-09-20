@@ -7,9 +7,93 @@
 //
 
 import UIKit
+import CoreBluetooth
+import CoreMotion
+
+let NOTIFY_MTU = 20
+let MOTION_SERVICE_UUID = "D639895B-60A2-486E-8C80-0BF2585FF6AD"
+let MOTION_CHARACTERISTIC_UUID = "64C7D7C2-CFF2-471A-BC3C-8EBF119747FB"
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate { //, PHBridgeSelectionViewControllerDelegate, PHBridgePushLinkViewControllerDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, CBCentralManagerDelegate, CBPeripheralManagerDelegate { //, PHBridgeSelectionViewControllerDelegate, PHBridgePushLinkViewControllerDelegate {
+    
+    // MARK: - SIOSocket
+    
+    var socket: SIOSocket?
+    
+    // MARK: - CoreBluetooth & CoreMotion
+    
+    var centralManager: CBCentralManager?
+    var peripheralManager: CBPeripheralManager?
+    var motionCharacteristic: CBMutableCharacteristic?
+    var motionManager: CMMotionManager?
+    var referenceFrame: CMAttitude?
+    
+    func centralManagerDidUpdateState(central: CBCentralManager!) {
+        if (central.state == .PoweredOn) {
+//            central.scanForPeripheralsWithServices(<#serviceUUIDs: [AnyObject]!#>, optio<#[NSObject : AnyObject]!#>ns: <#[NSObject : AnyObject]!#>)
+            central.scanForPeripheralsWithServices(nil, options: nil)
+        }
+    }
+    
+    func centralManager(central: CBCentralManager!, didDiscoverPeripheral peripheral: CBPeripheral!, advertisementData: [NSObject : AnyObject]!, RSSI: NSNumber!) {
+//        let localName = advertisementData[kCBAdvDataLocalName]
+        println()
+        println("rssi: \(RSSI) name: \(peripheral.name)")
+        println("advertisementData: \(advertisementData)")
+    }
+    
+    /** Required protocol method.  A full app should take care of all the possible states,
+    *  but we're just waiting for  to know when the CBPeripheralManager is ready
+    */
+    func peripheralManagerDidUpdateState(peripheral: CBPeripheralManager!) {
+        /*
+        CBPeripheralManagerStateUnknown  = 0,
+        CBPeripheralManagerStateResetting ,
+        CBPeripheralManagerStateUnsupported ,
+        CBPeripheralManagerStateUnauthorized ,
+        CBPeripheralManagerStatePoweredOff ,
+        CBPeripheralManagerStatePoweredOn ,
+        */
+        switch (peripheral.state) {
+        case .Unknown:
+            println("unk")
+        case .Resetting:
+            println("res")
+        case .Unsupported:
+            println("uns")
+//        case.Unauthorized:
+//            println("una")
+        case .PoweredOff:
+            println("off")
+        case .PoweredOn:
+            println("on")
+        default:
+            println("def")
+        }
+        if (peripheral.state == .PoweredOn) {
+            let cbUUID: CBUUID = CBUUID.UUIDWithString(MOTION_SERVICE_UUID)
+            let advertisementData = [ CBAdvertisementDataServiceUUIDsKey : cbUUID, CBAdvertisementDataLocalNameKey : "CAPOAPI" ]
+            peripheral.startAdvertising(advertisementData)
+            
+//            self.motionCharacteristic = CBMutableCharacteristic(
+                /*
+                [[CBMutableCharacteristic alloc] initWithType:[CBUUID UUIDWithString:MOTION_CHARACTERISTIC_UUID]
+                properties:CBCharacteristicPropertyRead | CBCharacteristicPropertyNotify
+                value:nil
+                permissions:CBAttributePermissionsReadable];
+            // Then the service
+            CBMutableService *transferService = [[CBMutableService alloc] initWithType:[CBUUID UUIDWithString:MOTION_SERVICE_UUID]
+                primary:YES];
+            
+            // Add the characteristic to the service
+            transferService.characteristics = @[self.motionCharacteristic];
+            
+            // And add it to the peripheral manager
+            [self.peripheralManager addService:transferService];
+            */
+        }
+    }
     
     // MARK: - HueSDK
     
@@ -94,6 +178,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate { //, PHBridgeSelectionVie
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        // SIO
+        SIOSocket.socketWithHost("http://bartolkaruza-measure-app.nodejitsu.com/game", response: { socket in
+            self.socket = socket
+        })
+        
+        // CM
+        self.motionManager = CMMotionManager()
+        self.motionManager?.deviceMotionUpdateInterval = 0.1
+        
+        // CB
+        self.centralManager = CBCentralManager(delegate: self, queue: nil)
+        self.peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
+        
+        // Hue
         self.phHueSDK = PHHueSDK()
         self.phHueSDK?.startUpSDK()
         self.phHueSDK?.enableLogging(true)
@@ -111,9 +210,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate { //, PHBridgeSelectionVie
         This notification will notify that there is no authentication against the bridge
         *****************************************************/
         let notificationManager: PHNotificationManager = PHNotificationManager.defaultManager()
-        notificationManager.registerObject(self, withSelector:Selector("localConnection"), forNotification:LOCAL_CONNECTION_NOTIFICATION)
-        notificationManager.registerObject(self, withSelector:Selector("noLocalConnection"), forNotification:NO_LOCAL_CONNECTION_NOTIFICATION)
-        notificationManager.registerObject(self, withSelector:Selector("notAuthenticated"), forNotification:NO_LOCAL_AUTHENTICATION_NOTIFICATION)
+        notificationManager.registerObject(self, withSelector: Selector("localConnection"), forNotification: LOCAL_CONNECTION_NOTIFICATION)
+        notificationManager.registerObject(self, withSelector: Selector("noLocalConnection"), forNotification: NO_LOCAL_CONNECTION_NOTIFICATION)
+        notificationManager.registerObject(self, withSelector: Selector("notAuthenticated"), forNotification: NO_LOCAL_AUTHENTICATION_NOTIFICATION)
         
         
         /*
@@ -157,6 +256,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate { //, PHBridgeSelectionVie
 
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        self.motionManager?.stopDeviceMotionUpdates()
+        self.peripheralManager?.stopAdvertising()
         self.phHueSDK?.stopSDK()
     }
 
