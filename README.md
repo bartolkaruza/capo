@@ -14,7 +14,7 @@ philipshue303
 00:17:88:17:16:3b
 
 
-game/start
+PUT game/start
 ```
 {
     "name": "game01",
@@ -22,10 +22,10 @@ game/start
 }
 ```
 
-game/game01/join
+POST/PUT game/game01/join
 ```
 {
-    "deviceAddress" : "01-AA-01-AA"
+    "deviceAddress" : "02-BB-02-BB"
 }
 ```
 
@@ -40,7 +40,7 @@ Request:
             "rssi" : "-82"
         },
         {
-            "deviceAddress" : "01-AA-01-A2",
+            "deviceAddress" : "03-CC-03-CC",
             "rssi" : "-83"
         }
     ]
@@ -50,7 +50,7 @@ Response:
 
 ```
 {
-    "currentColor" : "",
-    "targetCOlor" : ""
+    "currentColor" : "rgb",
+    "targetCOlor" : "rgb"
 }
 ```
