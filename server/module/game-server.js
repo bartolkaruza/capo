@@ -7,11 +7,13 @@ exports.init = function(socketIo) {
     io = socketIo;
     io.sockets.on('connection', function (socket) {
         socket.on('foo', function(message) {
+            socket.emit('bar', message);
             console.log(message);
         });
         socket.on('measurement', function (measurement) {
             var game = games[measurement.gameId];
-            socket.broadcast.emit('update', {currentColor:"afrdbn", targetColor:"afrdbn"});
+            var color = updateMeasurement(measurement);
+            socket.broadcast.emit('update', {currentColor:color, targetColor:game.targetColor});
         });
     });
 
@@ -22,7 +24,7 @@ exports.init = function(socketIo) {
 
 exports.handleCreateGame = function(req, resp) {
     var game = req.body;
-    games[game.name] = ({name: game.name, values:[{address:game.deviceAddress, playerNumber:1}], status:'waiting', targetColor:getRandomColor()});
+    games[game.name] = ({name: game.name, values:[{address:game.deviceAddress, playerNumber:1}], status:'waiting', targetColor:getRandomColor(), currentColor:{red:125, green:125, blue:125}, measurements:{red:[80], green:[80], blue:[80]}});
     gamesList.push(games[game.name]);
     resp.send(200, games[req.body.name]);
 };
@@ -44,60 +46,77 @@ exports.handleJoin = function(req, resp) {
     resp.send(200, game);
 };
 
-var currentColor = {
-    red:0,
-    green:0,
-    blue:0
-};
-
 var mapping = {
     player12:"red",
     player13:"blue",
     player23:"green"
 }
 
+exports.testMeasurements = function(req, resp) {
+    resp.send(200, updateMeasurement(req.body));
+};
+
 function updateMeasurement(measurement) {
+
     var game = games[measurement.gameId];
     var sourceNumber;
-    var targetNumber;
-    for(value in game.values) {
+    for(x in game.values) {
+        var value = game.values[x];
         if(value.address === measurement.deviceId) {
              sourceNumber = value.playerNumber;
         } else {
-            for(measureValue in measurement.values) {
-                if(measureValue.deviceAddress === value.address) {
-                    targetNumber = value.playerNumber;
+            for(y in measurement.values) {
+                var measurementValue = measurement.values[y];
+                if(measurementValue.deviceAddress === value.address) {
+                    game.currentColor = mapMeasurement(sourceNumber, value.playerNumber, game, mapping, measurementValue);
                 }
             }
         }
     }
-    if(sourceNumber === 1) {
-        if(targetNumber === 2) {
-            updateColor(mapping.player12, measurement.rssi);
-        } else if(targetNumber === 3) {
-            updateColor(mapping.player13, measurement.rssi);
+
+    return game.currentColor;
+}
+
+function mapMeasurement(sourceNumber, targetNumber, game, mapping, measurement) {
+    if (sourceNumber === 1) {
+        if (targetNumber === 2) {
+            return updateColor(game.currentColor, mapping.player12, measurement.rssi, game.measurements[mapping.player12]);
+        } else if (targetNumber === 3) {
+            return updateColor(game.currentColor, mapping.player13, measurement.rssi, game.measurements[mapping.player13]);
         }
-    } else if(sourceNumber === 2) {
-        if(targetNumber === 1) {
-            updateColor(mapping.player12, measurement.rssi);
-        } else if(targetNumber === 3) {
-            updateColor(mapping.player23, measurement.rssi);
+    } else if (sourceNumber === 2) {
+        if (targetNumber === 1) {
+            return updateColor(game.currentColor, mapping.player12, measurement.rssi, game.measurements[mapping.player12]);
+        } else if (targetNumber === 3) {
+            return updateColor(game.currentColor, mapping.player23, measurement.rssi, game.measurements[mapping.player23]);
         }
-    } else if(sourceNumber === 3) {
-        if(targetNumber === 1) {
-            updateColor(mapping.player13, measurement.rssi);
-        } else if(targetNumber === 2) {
-            updateColor(mapping.player23, measurement.rssi);
+    } else if (sourceNumber === 3) {
+        if (targetNumber === 1) {
+            return updateColor(game.currentColor, mapping.player13, measurement.rssi, game.measurements[mapping.player13]);
+        } else if (targetNumber === 2) {
+            return updateColor(game.currentColor, mapping.player23, measurement.rssi, game.measurements[mapping.player23]);
         }
     }
 }
 
-function updateColor(pair, rssi) {
-    currentColor[mapping[pair]] = calculateColorValue(rssi);
+function updateColor(currentColor, color, rssi, measurements) {
+    currentColor[color] = calculateColorValue(rssi, currentColor[color], measurements);
+    return currentColor;
 }
 
-function calculateColorValue(rssi) {
-    return 1;
+function calculateColorValue(rssi, currentValue, measurements) {
+    var oldRssi = measurements.pop();
+    if(!oldRssi) {
+        oldRssi = rssi;
+    }
+    measurements.push(rssi);
+    var newRssi = (Math.abs(oldRssi) + Math.abs(rssi)) / 2;
+    var newValue = map(newRssi, 70, 90, 0, 255);
+    return (newValue + currentValue) / 2;
+}
+
+function map(value, oldMin, oldMax, newMin, newMax) {
+    return newMin + (newMax - newMin) * (value - oldMin) / (oldMax - oldMin);
 }
 
 function getRandomColor() {

@@ -23,4 +23,6 @@ module.exports = function(app, options) {
 
   app.get('/game', gameServer.handleGameList);
 
+  app.post('/testMeasurements', gameServer.testMeasurements);
+
 };

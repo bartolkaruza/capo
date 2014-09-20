@@ -105,14 +105,14 @@ public class CapoSplashActivity extends Activity {
     }
 
     public void gameReady() {
-        logo.animate().y(-logo.getHeight() / 8);
+        logo.animate().setDuration(200).y(-logo.getHeight() / 8);
         buttonHolder.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
                 buttonHolder.getViewTreeObserver().removeOnPreDrawListener(this);
                 buttonHolder.setVisibility(View.VISIBLE);
                 buttonHolder.setAlpha(0);
-                buttonHolder.animate().alpha(1).setDuration(1000);
+                buttonHolder.animate().alpha(1).setStartDelay(200).setDuration(500);
                 return true;
             }
         });
