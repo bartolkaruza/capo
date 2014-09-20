@@ -14,6 +14,28 @@ let NOTIFY_MTU = 20
 let MOTION_SERVICE_UUID = "D639895B-60A2-486E-8C80-0BF2585FF6AD"
 let MOTION_CHARACTERISTIC_UUID = "64C7D7C2-CFF2-471A-BC3C-8EBF119747FB"
 
+/*
+// Generators
++ (void)socketWithHost:(NSString *)hostURL response:(void(^)(SIOSocket *socket))response;
++ (void)socketWithHost:(NSString *)hostURL reconnectAutomatically:(BOOL)reconnectAutomatically attemptLimit:(NSInteger)attempts withDelay:(NSTimeInterval)reconnectionDelay maximumDelay:(NSTimeInterval)maximumDelay timeout:(NSTimeInterval)timeout response:(void(^)(SIOSocket *socket))response;
+
+// Event responders
+@property (nonatomic, copy) void (^onConnect)();
+@property (nonatomic, copy) void (^onDisconnect)();
+@property (nonatomic, copy) void (^onError)(NSDictionary *errorInfo);
+
+@property (nonatomic, copy) void (^onReconnect)(NSInteger numberOfAttempts);
+@property (nonatomic, copy) void (^onReconnectionAttempt)(NSInteger numberOfAttempts);
+@property (nonatomic, copy) void (^onReconnectionError)(NSDictionary *errorInfo);
+
+- (void)on:(NSString *)event callback:(void (^)(id data))function;
+
+// Emitters
+- (void)emit:(NSString *)event, ... NS_REQUIRES_NIL_TERMINATION;
+
+- (void)close;
+*/
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, CBCentralManagerDelegate, CBPeripheralManagerDelegate { //, PHBridgeSelectionViewControllerDelegate, PHBridgePushLinkViewControllerDelegate {
     
@@ -182,6 +204,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CBCentralManagerDelegate,
         // SIO
         SIOSocket.socketWithHost("http://bartolkaruza-measure-app.nodejitsu.com/game", response: { socket in
             self.socket = socket
+//            self.socket?.on(<#event: String!#>, callback: <#((AnyObject!) -> Void)!##(AnyObject!) -> Void#>)
+            self.socket?.emit1("{ \"game\" : \"YOUDIE\", \"deviceAddress\" : \"HELL\" }")
+            
+//            self.socket?.onConnect = {
+//                
+//            }
+            
+            // Broadcast new location
+            /*
+            if (self.socket.socketIsConnected)
+            {
+            [self.socket emit: @"location",
+            [NSString stringWithFormat: @"%f,%f", userLocation.coordinate.latitude, userLocation.coordinate.longitude],
+            nil
+            ];
+            }
+            */
+
         })
         
         // CM
@@ -259,6 +299,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CBCentralManagerDelegate,
         self.motionManager?.stopDeviceMotionUpdates()
         self.peripheralManager?.stopAdvertising()
         self.phHueSDK?.stopSDK()
+        self.socket?.close()
     }
 
 }
