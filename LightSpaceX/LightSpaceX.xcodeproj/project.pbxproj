@@ -34,6 +34,7 @@
 		BA8B01AD19CDA415001EEC53 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA8B01AC19CDA415001EEC53 /* CoreBluetooth.framework */; };
 		BA8B01AF19CDA451001EEC53 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA8B01AE19CDA451001EEC53 /* SpriteKit.framework */; };
 		BA8B01B119CDA45C001EEC53 /* SceneKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA8B01B019CDA45C001EEC53 /* SceneKit.framework */; };
+		BA8B01B319CDAFC7001EEC53 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA8B01B219CDAFC7001EEC53 /* CoreMotion.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +90,7 @@
 		BA8B01AC19CDA415001EEC53 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		BA8B01AE19CDA451001EEC53 /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
 		BA8B01B019CDA45C001EEC53 /* SceneKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SceneKit.framework; path = System/Library/Frameworks/SceneKit.framework; sourceTree = SDKROOT; };
+		BA8B01B219CDAFC7001EEC53 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA8B01B319CDAFC7001EEC53 /* CoreMotion.framework in Frameworks */,
 				BA8B01B119CDA45C001EEC53 /* SceneKit.framework in Frameworks */,
 				BA8B01AF19CDA451001EEC53 /* SpriteKit.framework in Frameworks */,
 				BA8B01AD19CDA415001EEC53 /* CoreBluetooth.framework in Frameworks */,
@@ -116,6 +119,7 @@
 		BA8B014A19CD97B2001EEC53 = {
 			isa = PBXGroup;
 			children = (
+				BA8B01B219CDAFC7001EEC53 /* CoreMotion.framework */,
 				BA8B01B019CDA45C001EEC53 /* SceneKit.framework */,
 				BA8B01AE19CDA451001EEC53 /* SpriteKit.framework */,
 				BA8B01AC19CDA415001EEC53 /* CoreBluetooth.framework */,
