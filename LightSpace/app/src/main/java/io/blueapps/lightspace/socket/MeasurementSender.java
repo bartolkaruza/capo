@@ -26,8 +26,26 @@ public class MeasurementSender {
 
     private SocketIO socket;
 
+    private GameSocketCallback mCallback;
+
     public MeasurementSender() {
         socket = null;
+    }
+
+    public static interface GameSocketCallback
+    {
+        public void onConnected();
+
+        public void onSocketError(String message);
+
+        public void onHueChanged(String value);
+
+        public void onGameOver();
+    }
+
+    public void setSocketCallback( GameSocketCallback callback )
+    {
+        this.mCallback = callback;
     }
 
     public void init() {
@@ -38,6 +56,8 @@ public class MeasurementSender {
         }
         catch (MalformedURLException e) {
             e.printStackTrace();
+            if (mCallback != null)
+                mCallback.onSocketError(e.getMessage());
         }
         socket.connect(new IOCallback() {
             @Override
@@ -58,17 +78,21 @@ public class MeasurementSender {
             @Override
             public void onError(SocketIOException socketIOException) {
                 Log.e("onError", socketIOException.getMessage());
+                if (mCallback != null)
+                    mCallback.onSocketError(socketIOException.getMessage());
             }
 
             @Override
             public void onDisconnect() {
                 Log.d("onDisconnect", "Connection terminated.");
+                if (mCallback != null)
+                    mCallback.onSocketError("Connection terminated.");
             }
 
             @Override
             public void onConnect() {
-
-                Log.d("onConnect", "Connection established");
+                if (mCallback != null)
+                    mCallback.onConnected();
             }
 
         });

@@ -59,7 +59,7 @@ import retrofit.client.Response;
  * 
  *
  */
-public class GameActivity extends Activity implements OnItemClickListener, Callback<Game> {
+public class GameActivity extends Activity implements OnItemClickListener, Callback<Game>,MeasurementSender.GameSocketCallback {
 
     public static final String KEY_MODE = "mode";
     public static final String KEY_ADRESS = "adress";
@@ -129,6 +129,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
     private void initSockets() {
         Log.d("API", "initSockets");
         rssiSender = new MeasurementSender();
+        rssiSender.setSocketCallback(this);
         rssiSender.init();
     }
 
@@ -451,6 +452,27 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
     @Override
     public void failure(RetrofitError error) {
         Crouton.makeText(this, "there was a problem loading the game, please try again", Style.ALERT);
+        finish();
+    }
+
+    @Override
+    public void onConnected() {
+        Crouton.makeText(this, "Connection established.", Style.CONFIRM);
+    }
+
+    @Override
+    public void onSocketError(String message) {
+        Crouton.makeText(this, message, Style.ALERT);
+    }
+
+    @Override
+    public void onHueChanged(String value) {
+
+    }
+
+    @Override
+    public void onGameOver() {
+        Crouton.makeText(this, "Yay! you won.", Style.CONFIRM);
         finish();
     }
 }
