@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import io.blueapps.lightspace.socket.MeasurementSender;
+
 
 public class LightSpaceActivity extends Activity {
 
@@ -12,8 +14,10 @@ public class LightSpaceActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_light_space_activitiy);
-    }
-;
+        MeasurementSender sender = new MeasurementSender();
+        sender.send("someMessage");
+
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -13,6 +13,7 @@ philipshue303
 
 00:17:88:17:16:3b
 
+[api server](http://bartolkaruza-measure-app.nodejitsu.com/game)
 
 PUT game/create
 ```
@@ -46,12 +47,13 @@ POST/PUT game/game01/join
 }
 ```
 
-game/game01/02-BB-02-BB/update
+game/game01/update
 
 Request:
 ```
 {
-    [
+    "deviceId": "01-AA-01-AA",
+    "values": [
         {
             "deviceAddress" : "01-AA-01-AA",
             "rssi" : "-82"
