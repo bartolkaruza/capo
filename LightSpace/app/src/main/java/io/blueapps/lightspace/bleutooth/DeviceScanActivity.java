@@ -37,6 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.blueapps.lightspace.R;
 
@@ -51,7 +52,7 @@ public class DeviceScanActivity extends ListActivity {
 
     private static final int REQUEST_ENABLE_BT = 1;
     // Stops scanning after 10 seconds.
-    private static final long SCAN_PERIOD = 10000;
+    private static final long SCAN_PERIOD = 100000;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -146,7 +147,7 @@ public class DeviceScanActivity extends ListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
+        final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position).getDevice();
         if (device == null)
             return;
         final Intent intent = new Intent(this, DeviceControlActivity.class);
@@ -183,22 +184,29 @@ public class DeviceScanActivity extends ListActivity {
 
     // Adapter for holding devices found through scanning.
     private class LeDeviceListAdapter extends BaseAdapter {
-        private ArrayList<BluetoothDevice> mLeDevices;
+        private List<MyBluetoothDevice> mLeDevices;
         private LayoutInflater mInflator;
 
         public LeDeviceListAdapter() {
             super();
-            mLeDevices = new ArrayList<BluetoothDevice>();
+            mLeDevices = new ArrayList<MyBluetoothDevice>();
             mInflator = DeviceScanActivity.this.getLayoutInflater();
         }
 
-        public void addDevice(BluetoothDevice device) {
+        public void addDevice(MyBluetoothDevice device) {
             if (!mLeDevices.contains(device)) {
                 mLeDevices.add(device);
             }
+            else {
+                for (MyBluetoothDevice dev : mLeDevices) {
+                    if (dev.equals(device)) {
+                        dev.setRssi(device.getRssi());
+                    }
+                }
+            }
         }
 
-        public BluetoothDevice getDevice(int position) {
+        public MyBluetoothDevice getDevice(int position) {
             return mLeDevices.get(position);
         }
 
@@ -236,12 +244,19 @@ public class DeviceScanActivity extends ListActivity {
                 viewHolder = (ViewHolder) view.getTag();
             }
 
-            BluetoothDevice device = mLeDevices.get(i);
-            final String deviceName = device.getName();
-            if (deviceName != null && deviceName.length() > 0)
-                viewHolder.deviceName.setText(deviceName);
-            else
-                viewHolder.deviceName.setText(R.string.unknown_device);
+            MyBluetoothDevice myBluetoothDevice = mLeDevices.get(i);
+            BluetoothDevice device = myBluetoothDevice.getDevice();
+            String deviceName = device.getName();
+            if (deviceName != null && deviceName.length() > 0) {
+                deviceName = deviceName;
+            }
+            else {
+                deviceName = "unkown";
+            }
+
+            final String finalDeviceName = myBluetoothDevice.getRssi() + ": " + deviceName;
+
+            viewHolder.deviceName.setText(finalDeviceName);
             viewHolder.deviceAddress.setText(device.getAddress());
 
             return view;
@@ -252,11 +267,11 @@ public class DeviceScanActivity extends ListActivity {
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
 
         @Override
-        public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+        public void onLeScan(final BluetoothDevice device, final int rssi, byte[] scanRecord) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mLeDeviceListAdapter.addDevice(device);
+                    mLeDeviceListAdapter.addDevice(new MyBluetoothDevice(device, rssi));
                     mLeDeviceListAdapter.notifyDataSetChanged();
                 }
             });
