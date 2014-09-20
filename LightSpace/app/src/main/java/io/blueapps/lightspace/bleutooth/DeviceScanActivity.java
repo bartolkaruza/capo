@@ -247,10 +247,8 @@ public class DeviceScanActivity extends ListActivity {
             MyBluetoothDevice myBluetoothDevice = mLeDevices.get(i);
             BluetoothDevice device = myBluetoothDevice.getDevice();
             String deviceName = device.getName();
-            if (deviceName != null && deviceName.length() > 0) {
-                deviceName = deviceName;
-            }
-            else {
+
+            if (deviceName == null || deviceName.length() <= 0) {
                 deviceName = "unkown";
             }
 
