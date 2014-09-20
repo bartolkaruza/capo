@@ -32,7 +32,7 @@ Response:
 }
 ```
 
-GET game/list
+GET game
 ```
 [{
     "name", "game01"
