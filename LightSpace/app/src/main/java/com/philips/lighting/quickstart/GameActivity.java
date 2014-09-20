@@ -321,31 +321,35 @@ public class GameActivity extends Activity implements OnItemClickListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (listener != null) {
-            phHueSDK.getNotificationManager().unregisterSDKListener(listener);
+        if (mode == MODE_HOST) {
+            if (listener != null) {
+                phHueSDK.getNotificationManager().unregisterSDKListener(listener);
+            }
+            phHueSDK.disableAllHeartbeat();
         }
-        phHueSDK.disableAllHeartbeat();
         Crouton.cancelAllCroutons();
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        HueSharedPreferences prefs = HueSharedPreferences.getInstance(getApplicationContext());
-        PHAccessPoint accessPoint = (PHAccessPoint) adapter.getItem(position);
-        accessPoint.setUsername(prefs.getUsername());
+        if (mode == MODE_HOST) {
+            HueSharedPreferences prefs = HueSharedPreferences.getInstance(getApplicationContext());
+            PHAccessPoint accessPoint = (PHAccessPoint) adapter.getItem(position);
+            accessPoint.setUsername(prefs.getUsername());
 
-        PHBridge connectedBridge = phHueSDK.getSelectedBridge();
+            PHBridge connectedBridge = phHueSDK.getSelectedBridge();
 
-        if (connectedBridge != null) {
-            String connectedIP = connectedBridge.getResourceCache().getBridgeConfiguration().getIpAddress();
-            if (connectedIP != null) { // We are already connected here:-
-                phHueSDK.disableHeartbeat(connectedBridge);
-                phHueSDK.disconnect(connectedBridge);
+            if (connectedBridge != null) {
+                String connectedIP = connectedBridge.getResourceCache().getBridgeConfiguration().getIpAddress();
+                if (connectedIP != null) { // We are already connected here:-
+                    phHueSDK.disableHeartbeat(connectedBridge);
+                    phHueSDK.disconnect(connectedBridge);
+                }
             }
+            PHWizardAlertDialog.getInstance().showProgressDialog(R.string.connecting, GameActivity.this);
+            phHueSDK.connect(accessPoint);
         }
-        PHWizardAlertDialog.getInstance().showProgressDialog(R.string.connecting, GameActivity.this);
-        phHueSDK.connect(accessPoint);
     }
 
     public void doBridgeSearch() {
