@@ -469,18 +469,18 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
 
     @Override
     public void failure(RetrofitError error) {
-        Crouton.makeText(this, "there was a problem loading the game, please try again", Style.ALERT);
+        Crouton.makeText(this, "there was a problem loading the game, please try again", Style.ALERT).show();
         finish();
     }
 
     @Override
     public void onConnected() {
-        Crouton.makeText(this, "Connection established.", Style.CONFIRM);
+        Crouton.makeText(this, "Connection established.", Style.CONFIRM).show();
     }
 
     @Override
     public void onSocketError(String message) {
-        Crouton.makeText(this, message, Style.ALERT);
+        Crouton.makeText(this, message, Style.ALERT).show();
     }
 
     @Override
@@ -490,7 +490,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
 
     @Override
     public void onGameOver() {
-        Crouton.makeText(this, "Yay! you won.", Style.CONFIRM);
+        Crouton.makeText(this, "Yay! you won.", Style.CONFIRM).show();
         finish();
     }
 }
