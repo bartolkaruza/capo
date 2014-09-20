@@ -25,6 +25,7 @@ import com.philips.lighting.model.PHHueParsingError;
 
 import java.util.List;
 
+import io.blueapps.lightspace.ColorActivity;
 import io.blueapps.lightspace.R;
 
 /**
@@ -274,10 +275,10 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
         // Start the UPNP Searching of local bridges.
         sm.search(true, true);
     }
-    
+
     // Starting the main activity this way, prevents the PushLink Activity being shown when pressing the back button.
     public void startMainActivity() {   
-        Intent intent = new Intent(getApplicationContext(), MyApplicationActivity.class);
+        Intent intent = new Intent(getApplicationContext(), ColorActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)

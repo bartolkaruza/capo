@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.blueapps.lightspace" >
+    package="io.blueapps.lightspace">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_TASKS" />
@@ -19,23 +19,21 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
-            android:name=".bleutooth.DeviceScanActivity"
-            android:label="@string/app_name" >
-        </activity>
+            android:name="io.blueapps.lightspace.bleutooth.DeviceScanActivity"
+            android:label="@string/app_name"></activity>
         <activity
             android:name=".LightSpaceActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"></activity>
+        <activity
+            android:name=".ColorActivity"
+            android:label="@string/app_name">
 
         </activity>
         <activity
-            android:name=".ColorActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
             android:name="com.philips.lighting.quickstart.PHHomeActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"></activity>
         <activity
             android:name="com.philips.lighting.quickstart.MyApplicationActivity"
             android:label="@string/txt_selectbridges" />
@@ -49,10 +47,10 @@
 
         <activity
             android:name="ui.activities.CapoSplashActivity"
-            android:label="@string/title_activity_capo_splash"
-            android:theme="@android:style/Theme.NoTitleBar">
+            android:label="@string/title_activity_capo_splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
