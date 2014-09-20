@@ -1,6 +1,5 @@
-package com.http.test;
+package com.http;
 
-import com.http.GameRESTful;
 import com.http.data.CreateGame;
 import com.http.data.DeviceAddress;
 import com.http.data.Game;
