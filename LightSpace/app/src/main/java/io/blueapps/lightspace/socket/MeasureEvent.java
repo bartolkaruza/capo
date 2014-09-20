@@ -1,7 +1,5 @@
 package io.blueapps.lightspace.socket;
 
-import android.util.Pair;
-
 import java.util.List;
 
 /**
@@ -10,9 +8,9 @@ import java.util.List;
 public class MeasureEvent {
 
     private String deviceId;
-    private List<Pair<String, Integer>> measurements;
+    private List<MeasurementPair> measurements;
 
-    public MeasureEvent(String deviceId, List<Pair<String, Integer>> measurements) {
+    public MeasureEvent(String deviceId, List<MeasurementPair> measurements) {
         this.deviceId = deviceId;
         this.measurements = measurements;
     }

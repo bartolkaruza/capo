@@ -50,9 +50,54 @@ var currentColor = {
     blue:0
 };
 
+var mapping = {
+    player12:"red",
+    player13:"blue",
+    player23:"green"
+}
+
 function updateMeasurement(measurement) {
     var game = games[measurement.gameId];
+    var sourceNumber;
+    var targetNumber;
+    for(value in game.values) {
+        if(value.address === measurement.deviceId) {
+             sourceNumber = value.playerNumber;
+        } else {
+            for(measureValue in measurement.values) {
+                if(measureValue.deviceAddress === value.address) {
+                    targetNumber = value.playerNumber;
+                }
+            }
+        }
+    }
+    if(sourceNumber === 1) {
+        if(targetNumber === 2) {
+            updateColor(mapping.player12, measurement.rssi);
+        } else if(targetNumber === 3) {
+            updateColor(mapping.player13, measurement.rssi);
+        }
+    } else if(sourceNumber === 2) {
+        if(targetNumber === 1) {
+            updateColor(mapping.player12, measurement.rssi);
+        } else if(targetNumber === 3) {
+            updateColor(mapping.player23, measurement.rssi);
+        }
+    } else if(sourceNumber === 3) {
+        if(targetNumber === 1) {
+            updateColor(mapping.player13, measurement.rssi);
+        } else if(targetNumber === 2) {
+            updateColor(mapping.player23, measurement.rssi);
+        }
+    }
+}
 
+function updateColor(pair, rssi) {
+    currentColor[mapping[pair]] = calculateColorValue(rssi);
+}
+
+function calculateColorValue(rssi) {
+    return 1;
 }
 
 function getRandomColor() {
