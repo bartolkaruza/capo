@@ -580,7 +580,8 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
 
     @Override
     public void onConnected() {
-        Crouton.makeText(this, "Connection established.", Style.CONFIRM).show();
+
+//        Crouton.makeText(this, "Connection established.", Style.CONFIRM).show();
     }
 
     @Override
