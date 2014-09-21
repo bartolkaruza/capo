@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -109,6 +110,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
 
     GameRESTfulService gameService;
 
+
     // Create a BroadcastReceiver for ACTION_FOUND
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -119,6 +121,11 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 // Add the name and address to an array adapter to show in a ListView
                 Log.d("BLUETOOTH",device.getAddress());
+                short rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI,(short) 0);
+
+                Log.d("BLUETOOTH",device.getAddress() + " rssi:" + rssi);
+
+                mLeScanCallback.onLeScan(device,rssi,null);
             }
         }
     };
@@ -154,6 +161,17 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
         // Register the BroadcastReceiver
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
+        final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
+        mBluetoothAdapter.startDiscovery();
+        new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                mBluetoothAdapter.startDiscovery();
+                this.sendEmptyMessageDelayed(0,2000);
+            }
+        }.sendEmptyMessageDelayed(0,2000);
     }
 
     public void setHueDiscoColor(int... colors) {
@@ -217,7 +235,6 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
             return false;
         }
 
-        mBluetoothAdapter.startDiscovery();
         return true;
     }
 
