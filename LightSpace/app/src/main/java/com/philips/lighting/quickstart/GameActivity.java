@@ -411,12 +411,12 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
                         pair.setRssi(bluetoothDevice.getRssi());
                     }
 
-                    for (GameValues gv : values) {
-                        if (deviceAddress.equalsIgnoreCase(gv.getAddress())) {
+//                    for (GameValues gv : values) {
+//                        if (deviceAddress.equalsIgnoreCase(gv.getAddress())) {
                             pairs.add(pair);
                             rssiSender.updateMeasurement(pairs);
-                        }
-                    }
+//                        }
+//                    }
                 }
 
                 @Override

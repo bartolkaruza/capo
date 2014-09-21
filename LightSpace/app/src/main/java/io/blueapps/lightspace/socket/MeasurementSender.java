@@ -9,7 +9,6 @@ import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -32,8 +31,7 @@ public class MeasurementSender {
         socket = null;
     }
 
-    public static interface GameSocketCallback
-    {
+    public static interface GameSocketCallback {
         public void onConnected();
 
         public void onSocketError(String message);
@@ -43,8 +41,7 @@ public class MeasurementSender {
         public void onGameOver();
     }
 
-    public void setSocketCallback( GameSocketCallback callback )
-    {
+    public void setSocketCallback(GameSocketCallback callback) {
         this.mCallback = callback;
     }
 
@@ -108,7 +105,9 @@ public class MeasurementSender {
         if (socket != null) {
             Log.d("sender", "sending measurement with: " + time);
             Gson gson = new Gson();
-            socket.emit("measurement", gson.toJson(new MeasureEvent(CapoSplashActivity.address.getDeviceAddress(), measurements)));
+            String s = gson.toJson(new MeasureEvent(CapoSplashActivity.address.getDeviceAddress(), measurements));
+            Log.d("request", s);
+            socket.emit("measurement", s);
         }
     }
 }
