@@ -52,3 +52,5 @@ filtered-manifest
 # PDT-specific
 .buildpath
 art/.mayaSwatches/logo.mb.swatches
+images/
+workspace.mel
