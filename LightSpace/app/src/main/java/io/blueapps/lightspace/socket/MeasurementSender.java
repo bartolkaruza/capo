@@ -104,17 +104,16 @@ public class MeasurementSender {
         socket.disconnect();
     }
 
-    public void updateMeasurement(List<MeasurementPair> measurements) {
+    public void updateMeasurement(List<MeasurementPair> measurements, String gameId) {
         String time = DateFormat.getDateTimeInstance().format(new Date(System.currentTimeMillis()));
         if (socket != null && socket.isConnected()) {
-            Log.d("sender", "sending measurement with: " + time);
             Gson gson = new Gson();
-            String s = gson.toJson(new MeasureEvent(CapoSplashActivity.address.getDeviceAddress(), measurements));
+            String s = gson.toJson(new MeasureEvent(gameId, CapoSplashActivity.address.getDeviceAddress(), measurements));
+            Log.d("sender", "sending measurement with: " + time + s);
             socket.emit("measurement", s);
         }
-        else
-        {
-            Log.e("ERROR","socket not connected");
+        else {
+            Log.e("ERROR", "socket not connected");
         }
     }
 }

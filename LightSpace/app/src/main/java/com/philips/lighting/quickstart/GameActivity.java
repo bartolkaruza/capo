@@ -444,7 +444,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
                 pairs.add(pair);
             }
 
-            rssiSender.updateMeasurement(pairs);
+            rssiSender.updateMeasurement(pairs, gameID);
         }
     };
 
