@@ -23,7 +23,6 @@ import android.widget.TextView;
 import com.http.GameRESTfulService;
 import com.http.data.DeviceAddress;
 import com.http.data.Game;
-import com.http.data.GameValues;
 import com.philips.lighting.data.AccessPointListAdapter;
 import com.philips.lighting.data.HueSharedPreferences;
 import com.philips.lighting.hue.sdk.PHAccessPoint;
@@ -400,10 +399,10 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
         @Override
         public void onLeScan(final BluetoothDevice device, final int rssi, byte[] scanRecord) {
 
-            GameRESTfulService.getInstance().getGame(gameID, new Callback<Game>() {
-                @Override
-                public void success(Game game, Response response) {
-                    GameValues[] values = game.getValues();
+//            GameRESTfulService.getInstance().getGame("game01", new Callback<Game>() {
+//                @Override
+//                public void success(Game game, Response response) {
+//                    GameValues[] values = game.getValues();
 
                     MyBluetoothDevice bluetoothDevice = new MyBluetoothDevice(device, rssi);
                     List<MeasurementPair> pairs = new ArrayList<MeasurementPair>();
@@ -422,13 +421,13 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
                             rssiSender.updateMeasurement(pairs);
 //                        }
 //                    }
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-
-                }
-            });
+//                }
+//
+//                @Override
+//                public void failure(RetrofitError error) {
+//
+//                }
+//            });
 
         }
     };

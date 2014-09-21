@@ -19,7 +19,7 @@ import retrofit.http.Path;
 public interface GameRESTful {
 
     public static String END_POINT = "http://bartolkaruza-measure-app.nodejitsu.com/";
-    public static String SOCKET_ENDPOINT = "http://bartolkaruza-measure-app.nodejitsu.com:3000/";
+    public static String SOCKET_ENDPOINT = "http://bartolkaruza-measure-app.nodejitsu.com/";
 
     @PUT("/game")
     void createGame(@Body CreateGame gameRequest, Callback<Game> cb);
