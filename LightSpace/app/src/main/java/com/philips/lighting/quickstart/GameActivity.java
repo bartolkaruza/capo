@@ -399,36 +399,23 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
 
         @Override
         public void onLeScan(final BluetoothDevice device, final int rssi, byte[] scanRecord) {
+            MyBluetoothDevice bluetoothDevice = new MyBluetoothDevice(device, rssi);
+            List<MeasurementPair> pairs = new ArrayList<MeasurementPair>();
+            MeasurementPair pair = new MeasurementPair();
+            String deviceAddress = "";
 
-            GameRESTfulService.getInstance().getGame("game01", new Callback<Game>() {
-                @Override
-                public void success(Game game, Response response) {
-                    GameValues[] values = game.getValues();
+            if (bluetoothDevice != null && bluetoothDevice.getDevice() != null) {
+                deviceAddress = bluetoothDevice.getDevice().getAddress();
+                pair.setDeviceAddress(deviceAddress);
+                pair.setRssi(bluetoothDevice.getRssi());
+            }
 
-                    MyBluetoothDevice bluetoothDevice = new MyBluetoothDevice(device, rssi);
-                    List<MeasurementPair> pairs = new ArrayList<MeasurementPair>();
-                    MeasurementPair pair = new MeasurementPair();
-                    String deviceAddress = "";
-
-                    if (bluetoothDevice != null && bluetoothDevice.getDevice() != null) {
-                        deviceAddress = bluetoothDevice.getDevice().getAddress();
-                        pair.setDeviceAddress(deviceAddress);
-                        pair.setRssi(bluetoothDevice.getRssi());
-                    }
-
-                    for (GameValues gv : values) {
-                        if (deviceAddress.equalsIgnoreCase(gv.getAddress())) {
-                            pairs.add(pair);
-                            rssiSender.updateMeasurement(pairs);
-                        }
-                    }
+            for (GameValues gv : values) {
+                if (deviceAddress.equalsIgnoreCase(gv.getAddress())) {
+                    pairs.add(pair);
+                    rssiSender.updateMeasurement(pairs);
                 }
-
-                @Override
-                public void failure(RetrofitError error) {
-
-                }
-            });
+            }
 
         }
     };

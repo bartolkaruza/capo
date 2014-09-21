@@ -12,8 +12,15 @@ exports.init = function(socketIo) {
         });
         socket.on('measurement', function (measurement) {
             var game = games[measurement.gameId];
-            var color = updateMeasurement(measurement);
-            socket.broadcast.emit('update', {currentColor:color, targetColor:game.targetColor});
+
+			if (game) {
+				for (id in game.values) {
+					if (measurement.measurements[0].deviceAddress === id.deviceAddress) { //player is known								
+						var color = updateMeasurement(measurement);
+						socket.broadcast.emit('update', {currentColor:color, targetColor:game.targetColor});	
+					}
+				}
+			}
         });
     });
 
