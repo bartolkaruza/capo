@@ -288,7 +288,6 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
     @Override
     protected void onPause() {
         super.onPause();
-        scanLeDevice(false);
     }
 
     @Override
@@ -304,8 +303,6 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
             }
         }
 
-        if (mBluetoothAdapter != null)
-            scanLeDevice(true);
     }
 
     @Override
