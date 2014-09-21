@@ -29,9 +29,11 @@ var gameServer = require('./module/game-server.js');
 gameServer.init(io);
 
 var port = 3000;
+var socketPort = 3000;
 
 app.configure(function(){
   server.listen(process.env.PORT || port);
+//  server.listen(socketPort);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
   app.use(express.favicon());
