@@ -6,7 +6,6 @@ import com.http.data.Game;
 
 import java.util.List;
 
-import io.blueapps.lightspace.socket.MeasureEvent;
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -19,8 +18,8 @@ import retrofit.http.Path;
  */
 public interface GameRESTful {
 
-    public static String END_POINT = "http://10.12.1.74:3000/";
-    public static String SOCKET_ENDPOINT = "http://10.12.1.74:3000/";
+    public static String END_POINT = "http://bartolkaruza-measure-app.nodejitsu.com/";
+//    public static String SOCKET_ENDPOINT = "http://10.12.1.74:3000/";
 
     @PUT("/game")
     void createGame(@Body CreateGame gameRequest, Callback<Game> cb);
