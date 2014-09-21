@@ -126,6 +126,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
                 Log.d("BLUETOOTH",device.getAddress() + " rssi:" + rssi);
 
                 mLeScanCallback.onLeScan(device,rssi,null);
+
             }
         }
     };
@@ -163,13 +164,20 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
         registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
         final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
-        mBluetoothAdapter.startDiscovery();
         new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                mBluetoothAdapter.startDiscovery();
-                this.sendEmptyMessageDelayed(0,2000);
+
+                if (msg.what == 0) {
+                    mBluetoothAdapter.startDiscovery();
+                    this.sendEmptyMessageDelayed(1, 2000);
+                } else {
+                    mBluetoothAdapter.cancelDiscovery();
+                    this.sendEmptyMessageDelayed(0,2000);
+                }
+
+
             }
         }.sendEmptyMessageDelayed(0,2000);
     }

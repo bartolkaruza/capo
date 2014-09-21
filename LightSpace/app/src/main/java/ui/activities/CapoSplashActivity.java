@@ -199,6 +199,7 @@ public class CapoSplashActivity extends Activity {
         builder.setTitle("Game Title");
         final EditText input = new EditText(this);
         builder.setView(input);
+        input.setText("Game");
         builder.setPositiveButton("Play", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
