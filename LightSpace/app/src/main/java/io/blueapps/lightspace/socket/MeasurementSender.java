@@ -75,6 +75,10 @@ public class MeasurementSender {
             @Override
             public void onError(SocketIOException socketIOException) {
                 Log.e("onError", socketIOException.getMessage());
+                Throwable cause = socketIOException.getCause();
+                if (cause != null) {
+                    Log.e("onError", "cause: " + cause.getMessage());
+                }
                 if (mCallback != null && socketIOException != null)
                     mCallback.onSocketError(socketIOException.getMessage());
             }
