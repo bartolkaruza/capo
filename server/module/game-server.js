@@ -54,7 +54,7 @@ exports.handleJoin = function(req, resp) {
         game.values.push({address:req.body.deviceAddress, playerNumber:(game.values.length + 1)});
         if(game.values.length > 2) game.status = 'started';
         resp.send(200, game);
-        currentSocket.emitted_end("join", game);
+        currentSocket.emit("join", game);
     } else {
         resp.send(400, "game not found");
     }
