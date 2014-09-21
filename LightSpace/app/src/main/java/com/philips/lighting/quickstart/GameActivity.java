@@ -91,7 +91,6 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
     private BluetoothAdapter mBluetoothAdapter;
 
     private Handler mHandler;
-    private Handler mColorHandler;
 
     private boolean mScanning = false;
 
@@ -135,28 +134,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
         }
     }
 
-    private class ColorHandler extends Handler implements Callback<Game>
-    {
 
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            gameService.getColor(gameID,this);
-            this.sendEmptyMessageDelayed(0,2000);
-        }
-
-        @Override
-        public void success(Game game, Response response) {
-            if (phHueSDK != null && phHueSDK.getSelectedBridge() != null)
-            {
-                setHueDiscoColor();
-            }
-        }
-
-        @Override
-        public void failure(RetrofitError error) {
-
-        }
 
         public void setHueDiscoColor(int... colors) {
             PHBridge bridge = phHueSDK.getSelectedBridge();
@@ -186,13 +164,9 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
                 }
             }
         }
-    }
 
-    private void startPolling()
-    {
-        mColorHandler = new ColorHandler();
-        mColorHandler.sendEmptyMessageDelayed(0, 2000);
-    }
+
+
 
     public void setActivityBackgroundColor(int color) {
         View view = this.getWindow().getDecorView();
@@ -477,6 +451,8 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
                     MeasurementPair pair = new MeasurementPair();
                     String deviceAddress = "";
 
+                    setHueDiscoColor();
+
                     if (bluetoothDevice != null && bluetoothDevice.getDevice() != null) {
                         deviceAddress = bluetoothDevice.getDevice().getAddress();
                         pair.setDeviceAddress(deviceAddress);
@@ -549,12 +525,6 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
 
             Log.d("GAME", "ready");
             titleText.setText("This is your target color! GO!");
-
-            if (mode == MODE_HOST)
-            {
-                startPolling();
-            }
-
             titleText.postDelayed(new Runnable() {
                 @Override
                 public void run() {

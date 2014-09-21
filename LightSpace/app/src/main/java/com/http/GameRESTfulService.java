@@ -58,8 +58,4 @@ public class GameRESTfulService {
         service.joinGame(game, localAddress, callback);
     }
 
-    public void getColor(@Path("gameId") String gameId, Callback<Game> callback) {
-        service.getCurrentColor(gameId, callback);
-    }
-
 }

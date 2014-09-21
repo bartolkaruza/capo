@@ -8,6 +8,8 @@ public class Game
 {
     private String targetColor;
 
+    private String currentColor;
+
     private GameValues[] values;
 
     private String status;
@@ -22,6 +24,14 @@ public class Game
     public void setTargetColor (String targetColor)
     {
         this.targetColor = targetColor;
+    }
+
+    public String getCurrentColor() {
+        return currentColor;
+    }
+
+    public void setCurrentColor(String currentColor) {
+        this.currentColor = currentColor;
     }
 
     public GameValues[] getValues ()
