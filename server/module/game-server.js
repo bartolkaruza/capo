@@ -13,11 +13,12 @@ exports.init = function(socketIo) {
             console.log(message);
         });
         socket.on('measurement', function (measurement) {
+            measurement = JSON.parse(measurement);
             var game = games[measurement.gameId];
-
+            console.log(measurement);
 			if (game) {
 				for (id in game.values) {
-					if (measurement.measurements[0].deviceAddress === id.deviceAddress) { //player is known								
+					if (measurement.valuePair.deviceAddress === game.values[id].address) { //player is known
 						var color = updateMeasurement(measurement);
 						socket.broadcast.emit('update', {currentColor:color, targetColor:game.targetColor});	
 					}
@@ -54,7 +55,7 @@ exports.handleJoin = function(req, resp) {
         game.values.push({address:req.body.deviceAddress, playerNumber:(game.values.length + 1)});
         if(game.values.length > 2) game.status = 'started';
         resp.send(200, game);
-        currentSocket.emitted_end("join", game);
+        currentSocket.emit("join", game);
     } else {
         resp.send(400, "game not found");
     }
