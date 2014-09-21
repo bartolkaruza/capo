@@ -154,7 +154,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
         initBT();
 
         if (this.mode == MODE_HOST) {
-            //initHUEAPI();
+            initHUEAPI();
         }
     }
 
