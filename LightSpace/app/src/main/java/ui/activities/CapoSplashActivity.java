@@ -3,14 +3,11 @@ package ui.activities;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.ParcelUuid;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,8 +19,6 @@ import com.http.GameRESTfulService;
 import com.http.data.DeviceAddress;
 import com.http.data.Game;
 import com.philips.lighting.quickstart.GameActivity;
-
-import java.lang.reflect.Method;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -152,8 +147,7 @@ public class CapoSplashActivity extends Activity {
         askForGameID(GameActivity.MODE_JOIN);
     }
 
-    public void startGame(final int mode, String gameId)
-    {
+    public void startGame(final int mode, String gameId) {
         if (mode == GameActivity.MODE_HOST) {
             gameService.createGame(gameId, new Callback<Game>() {
                 @Override
@@ -171,8 +165,7 @@ public class CapoSplashActivity extends Activity {
                 }
             });
         }
-        else
-        {
+        else {
             gameService.joinGame(gameId, new Callback<Game>() {
                 @Override
                 public void success(Game game, Response response) {
@@ -197,8 +190,7 @@ public class CapoSplashActivity extends Activity {
         Crouton.cancelAllCroutons();
     }
 
-    public void askForGameID(final int mode)
-    {
+    public void askForGameID(final int mode) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Game Title");
         final EditText input = new EditText(this);
@@ -232,14 +224,11 @@ public class CapoSplashActivity extends Activity {
 
     public void setUpDeviceAddress() {
         try {
+            BluetoothAdapter m_BluetoothAdapter = null; // Local Bluetooth adapter
+            m_BluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            String m_szBTMAC = m_BluetoothAdapter.getAddress();
 
-            BluetoothManager mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-            BluetoothAdapter mBluetoothAdapter = mBluetoothManager.getAdapter();
-
-            Method getUUIDsMethod = BluetoothAdapter.class.getDeclaredMethod("getUuids");
-            ParcelUuid[] dUUIDs = (ParcelUuid[]) getUUIDsMethod.invoke(mBluetoothAdapter, null);
-
-            address = new DeviceAddress(dUUIDs[0].getUuid().toString());
+            address = new DeviceAddress(m_szBTMAC);
         }
         catch (Exception e) {
             Log.e("BLEService", e.getMessage());
