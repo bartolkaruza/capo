@@ -154,21 +154,41 @@ public class CapoSplashActivity extends Activity {
 
     public void startGame(final int mode, String gameId)
     {
-        gameService.joinGame(gameId, new Callback<Game>() {
-            @Override
-            public void success(Game game, Response response) {
-                Intent inte = new Intent(CapoSplashActivity.this, GameActivity.class);
-                inte.putExtra(GameActivity.KEY_MODE, mode);
-                inte.putExtra(GameActivity.KEY_ADRESS, address.getDeviceAddress());
-                inte.putExtra(GameActivity.KEY_GAME_ID, game.getName());
-                startActivity(inte);
-            }
+        if (mode == GameActivity.MODE_HOST) {
+            gameService.createGame(gameId, new Callback<Game>() {
+                @Override
+                public void success(Game game, Response response) {
+                    Intent inte = new Intent(CapoSplashActivity.this, GameActivity.class);
+                    inte.putExtra(GameActivity.KEY_MODE, mode);
+                    inte.putExtra(GameActivity.KEY_ADRESS, address.getDeviceAddress());
+                    inte.putExtra(GameActivity.KEY_GAME_ID, game.getName());
+                    startActivity(inte);
+                }
 
-            @Override
-            public void failure(RetrofitError error) {
-                Crouton.makeText(CapoSplashActivity.this, "Error creating Game. " + error.getMessage(), Style.ALERT).show();
-            }
-        });
+                @Override
+                public void failure(RetrofitError error) {
+                    Crouton.makeText(CapoSplashActivity.this, "Error creating Game. " + error.getMessage(), Style.ALERT).show();
+                }
+            });
+        }
+        else
+        {
+            gameService.joinGame(gameId, new Callback<Game>() {
+                @Override
+                public void success(Game game, Response response) {
+                    Intent inte = new Intent(CapoSplashActivity.this, GameActivity.class);
+                    inte.putExtra(GameActivity.KEY_MODE, mode);
+                    inte.putExtra(GameActivity.KEY_ADRESS, address.getDeviceAddress());
+                    inte.putExtra(GameActivity.KEY_GAME_ID, game.getName());
+                    startActivity(inte);
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Crouton.makeText(CapoSplashActivity.this, "Error creating Game. " + error.getMessage(), Style.ALERT).show();
+                }
+            });
+        }
     }
 
     @Override

@@ -25,6 +25,14 @@ public class GameRESTfulService {
         this.localAddress = address;
     }
 
+    public static GameRESTfulService getInstance() {
+        if (instance == null) {
+            throw new RuntimeException("initialize with address");
+        }
+
+        return instance;
+    }
+
     public static GameRESTfulService getInstance(DeviceAddress address) {
         if (instance == null) {
             instance = new GameRESTfulService(address);

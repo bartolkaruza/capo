@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.http.GameRESTfulService;
 import com.http.data.DeviceAddress;
 import com.http.data.Game;
+import com.http.data.GameValues;
 import com.philips.lighting.data.AccessPointListAdapter;
 import com.philips.lighting.data.HueSharedPreferences;
 import com.philips.lighting.hue.sdk.PHAccessPoint;
@@ -61,7 +62,7 @@ import retrofit.client.Response;
  * 
  *
  */
-public class GameActivity extends Activity implements OnItemClickListener, Callback<Game>,MeasurementSender.GameSocketCallback {
+public class GameActivity extends Activity implements OnItemClickListener, Callback<Game>, MeasurementSender.GameSocketCallback {
 
     public static final String KEY_MODE = "mode";
     public static final String KEY_ADRESS = "adress";
@@ -115,7 +116,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
         }
 
         gameService = GameRESTfulService.getInstance(new DeviceAddress(deviceAdress));
-        gameService.getGame(gameID,this);
+        gameService.getGame(gameID, this);
 
         mHandler = new Handler();
         initBLE();
@@ -140,7 +141,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
 
     private boolean initBLE() {
 
-        adapter = new AccessPointListAdapter(getApplicationContext(),new ArrayList<PHAccessPoint>());
+        adapter = new AccessPointListAdapter(getApplicationContext(), new ArrayList<PHAccessPoint>());
         bridgeList.setOnItemClickListener(this);
         bridgeList.setAdapter(adapter);
 
@@ -309,7 +310,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
             else if (code == PHHueError.BRIDGE_NOT_RESPONDING) {
                 Log.w(TAG, "Bridge Not Responding . . . ");
                 PHWizardAlertDialog.getInstance().closeProgressDialog();
-                Crouton.makeText(GameActivity.this,message,Style.ALERT);
+                Crouton.makeText(GameActivity.this, message, Style.ALERT);
 
             }
             else if (code == PHMessageType.BRIDGE_NOT_FOUND) {
@@ -398,20 +399,37 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
 
         @Override
         public void onLeScan(final BluetoothDevice device, final int rssi, byte[] scanRecord) {
-            runOnUiThread(new Runnable() {
+
+            GameRESTfulService.getInstance().getGame("game01", new Callback<Game>() {
                 @Override
-                public void run() {
+                public void success(Game game, Response response) {
+                    GameValues[] values = game.getValues();
+
                     MyBluetoothDevice bluetoothDevice = new MyBluetoothDevice(device, rssi);
                     List<MeasurementPair> pairs = new ArrayList<MeasurementPair>();
                     MeasurementPair pair = new MeasurementPair();
+                    String deviceAddress = "";
+
                     if (bluetoothDevice != null && bluetoothDevice.getDevice() != null) {
-                        pair.setDeviceAddress(bluetoothDevice.getDevice().getAddress());
+                        deviceAddress = bluetoothDevice.getDevice().getAddress();
+                        pair.setDeviceAddress(deviceAddress);
                         pair.setRssi(bluetoothDevice.getRssi());
                     }
-                    pairs.add(pair);
-                    rssiSender.updateMeasurement(pairs);
+
+                    for (GameValues gv : values) {
+                        if (deviceAddress.equalsIgnoreCase(gv.getAddress())) {
+                            pairs.add(pair);
+                            rssiSender.updateMeasurement(pairs);
+                        }
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+
                 }
             });
+
         }
     };
 
@@ -461,6 +479,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
     @Override
     public void success(Game game, Response response) {
         if (game != null) {
+
             Log.d("GAME","ready");
             titleText.setText("This is your target color! GO!");
 
@@ -492,6 +511,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
                     }).start();
                 }
             },5000);
+
             this.gameView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw() {
@@ -525,7 +545,12 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
 
     @Override
     public void onSocketError(String message) {
-        Crouton.makeText(this, message, Style.ALERT).show();
+        try {
+            Crouton.makeText(this, message, Style.ALERT).show();
+        } catch (Exception e)
+        {
+            
+        }
     }
 
     @Override
