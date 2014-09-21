@@ -185,12 +185,15 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
         final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
 
+
         // Checks if Bluetooth is supported on the device.
         if (mBluetoothAdapter == null) {
             Crouton.makeText(this, R.string.error_bluetooth_not_supported, Style.ALERT).show();
             finish();
             return false;
         }
+
+        mBluetoothAdapter.startDiscovery();
         return true;
     }
 
