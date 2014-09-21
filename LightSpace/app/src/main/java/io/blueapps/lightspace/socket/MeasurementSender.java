@@ -12,7 +12,6 @@ import org.json.JSONObject;
 import java.net.MalformedURLException;
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.List;
 
 import io.socket.IOAcknowledge;
 import io.socket.IOCallback;
@@ -51,7 +50,7 @@ public class MeasurementSender {
         try {
             // socket = new SocketIO("http://192.168.1.88:3000/");
             // socket = new SocketIO("http://bartolkaruza-measure-app.nodejitsu.com/");
-            socket = new SocketIO(GameRESTful.SOCKET_ENDPOINT);
+            socket = new SocketIO(GameRESTful.END_POINT);
         }
         catch (MalformedURLException e) {
             e.printStackTrace();
