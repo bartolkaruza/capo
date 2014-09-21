@@ -451,7 +451,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
                     MeasurementPair pair = new MeasurementPair();
                     String deviceAddress = "";
 
-                    setHueDiscoColor();
+                    setHueDiscoColor(new int[]{game.getCurrentColor().getRed(), game.getCurrentColor().getGreen(), game.getCurrentColor().getBlue()});
 
                     if (bluetoothDevice != null && bluetoothDevice.getDevice() != null) {
                         deviceAddress = bluetoothDevice.getDevice().getAddress();
