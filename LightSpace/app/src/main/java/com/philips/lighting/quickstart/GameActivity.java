@@ -75,6 +75,8 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
 
     private static final long SCAN_PERIOD = 100000;
     private static final int REQUEST_ENABLE_BT = 1;
+    private static final long UPDATE_MEASUREMENT_INTERVAL = 5000;
+    private long lastUpdateMeasurementTime = 0;
 
     private int mode = MODE_JOIN;
     private String deviceAdress;
@@ -426,8 +428,12 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
         sm.search(true, true);
     }
 
+
+
     // Device scan callback.
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+
+
 
         @Override
         public void onLeScan(final BluetoothDevice device, final int rssi, byte[] scanRecord) {
@@ -444,7 +450,10 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
                 pairs.add(pair);
             }
 
-            rssiSender.updateMeasurement(pairs, gameID);
+            if (System.currentTimeMillis() > (lastUpdateMeasurementTime + UPDATE_MEASUREMENT_INTERVAL)) {
+                rssiSender.updateMeasurement(pairs, gameID);
+                lastUpdateMeasurementTime = System.currentTimeMillis();
+            }
         }
     };
 
