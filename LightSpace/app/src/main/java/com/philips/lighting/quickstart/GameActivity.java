@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +24,6 @@ import android.widget.TextView;
 import com.http.GameRESTfulService;
 import com.http.data.DeviceAddress;
 import com.http.data.Game;
-import com.http.data.GameValues;
 import com.philips.lighting.data.AccessPointListAdapter;
 import com.philips.lighting.data.HueSharedPreferences;
 import com.philips.lighting.hue.sdk.PHAccessPoint;
@@ -31,9 +31,12 @@ import com.philips.lighting.hue.sdk.PHBridgeSearchManager;
 import com.philips.lighting.hue.sdk.PHHueSDK;
 import com.philips.lighting.hue.sdk.PHMessageType;
 import com.philips.lighting.hue.sdk.PHSDKListener;
+import com.philips.lighting.hue.sdk.utilities.PHUtilities;
 import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.model.PHHueError;
 import com.philips.lighting.model.PHHueParsingError;
+import com.philips.lighting.model.PHLight;
+import com.philips.lighting.model.PHLightState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,6 +90,8 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
     private BluetoothAdapter mBluetoothAdapter;
 
     private Handler mHandler;
+    private Handler mColorHandler;
+
     private boolean mScanning = false;
 
     private boolean lastSearchWasIPScan = false;
@@ -125,6 +130,62 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
         if (this.mode == MODE_HOST) {
             initHUEAPI();
         }
+    }
+
+    private class ColorHandler extends Handler implements Callback<Game> {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            gameService.getColor(gameID, this);
+            this.sendEmptyMessageDelayed(0, 2000);
+        }
+
+        @Override
+        public void success(Game game, Response response) {
+            if (phHueSDK != null && phHueSDK.getSelectedBridge() != null) {
+                setHueDiscoColor();
+            }
+        }
+
+        @Override
+        public void failure(RetrofitError error) {
+
+        }
+
+        public void setHueDiscoColor(int... colors) {
+            PHBridge bridge = phHueSDK.getSelectedBridge();
+
+            if (bridge != null) {
+                List<PHLight> allLights = bridge.getResourceCache().getAllLights();
+                int i = 0;
+                for (PHLight light : allLights) {
+                    int r = (colors[i] >> 16) & 0xFF;
+                    int g = (colors[i] >> 8) & 0xFF;
+                    int b = (colors[i] >> 0) & 0xFF;
+
+                    float xy[] = PHUtilities.calculateXYFromRGB(r, g, b, light.getModelNumber());
+                    PHLightState lightState = new PHLightState();
+                    lightState.setX(xy[0]);
+                    lightState.setY(xy[1]);
+                    lightState.setAlertMode(PHLight.PHLightAlertMode.ALERT_SELECT);
+                    lightState.setColorMode(PHLight.PHLightColorMode.COLORMODE_XY);
+                    lightState.setBrightness(50);
+
+                    // lightState.setHue(rand.nextInt(MAX_HUE));
+                    // To validate your lightstate is valid (before sending to the bridge) you can use:
+                    // String validState = lightState.validateState();
+                    // bridge.updateLightState(light, lightState, listener);
+                    bridge.updateLightState(light, lightState); // If no bridge response is required then use this simpler form.
+                    i++;
+                }
+            }
+        }
+    }
+
+    private void startPolling() {
+        mColorHandler = new ColorHandler();
+        mColorHandler.sendEmptyMessageDelayed(0, 2000);
     }
 
     public void setActivityBackgroundColor(int color) {
@@ -408,15 +469,11 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
                 deviceAddress = bluetoothDevice.getDevice().getAddress();
                 pair.setDeviceAddress(deviceAddress);
                 pair.setRssi(bluetoothDevice.getRssi());
+
+                pairs.add(pair);
             }
 
-            for (GameValues gv : values) {
-                if (deviceAddress.equalsIgnoreCase(gv.getAddress())) {
-                    pairs.add(pair);
-                    rssiSender.updateMeasurement(pairs);
-                }
-            }
-
+            rssiSender.updateMeasurement(pairs);
         }
     };
 
@@ -469,6 +526,10 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
 
             Log.d("GAME", "ready");
             titleText.setText("This is your target color! GO!");
+
+            if (mode == MODE_HOST) {
+                startPolling();
+            }
 
             titleText.postDelayed(new Runnable() {
                 @Override
@@ -525,7 +586,8 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
 
     @Override
     public void onConnected() {
-        Crouton.makeText(this, "Connection established.", Style.CONFIRM).show();
+
+        // Crouton.makeText(this, "Connection established.", Style.CONFIRM).show();
     }
 
     @Override

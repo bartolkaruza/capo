@@ -106,11 +106,15 @@ public class MeasurementSender {
 
     public void updateMeasurement(List<MeasurementPair> measurements) {
         String time = DateFormat.getDateTimeInstance().format(new Date(System.currentTimeMillis()));
-        if (socket != null) {
+        if (socket != null && socket.isConnected()) {
             Log.d("sender", "sending measurement with: " + time);
             Gson gson = new Gson();
             String s = gson.toJson(new MeasureEvent(CapoSplashActivity.address.getDeviceAddress(), measurements));
             socket.emit("measurement", s);
+        }
+        else
+        {
+            Log.e("ERROR","socket not connected");
         }
     }
 }
