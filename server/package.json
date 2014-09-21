@@ -2,7 +2,7 @@
   "name": "measure-app",
   "description": "measure-app",
   "private": true,
-  "version": "1.0.0-24",
+  "version": "1.0.0-31",
   "main": "app.js",
   "scripts": {
     "start": "node app"
@@ -17,7 +17,7 @@
     "request": "~2.21.0",
     "strong-cluster-control": "~0.1.0",
     "strong-agent": "~0.2.15",
-    "socket.io": "~0.9.16",
+    "socket.io": "0.9.16",
     "socket.io-browserify": "0.9.6"
   },
   "subdomain": "bartolkaruza-measure-app",
