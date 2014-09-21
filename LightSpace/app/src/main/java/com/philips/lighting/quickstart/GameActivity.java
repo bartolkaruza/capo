@@ -1,5 +1,6 @@
 package com.philips.lighting.quickstart;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -17,6 +18,7 @@ import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.http.GameRESTfulService;
 import com.http.data.DeviceAddress;
@@ -94,6 +96,9 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
 
     @InjectView(R.id.bridge_list)
     protected ListView bridgeList;
+
+    @InjectView(R.id.game_status_text)
+    protected TextView titleText;
 
     GameRESTfulService gameService;
 
@@ -450,20 +455,80 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
         invalidateOptionsMenu();
     }
 
+    /**
+     * Returns the complimentary (opposite) color.
+     * @param color int RGB color to return the compliment of
+     * @return int RGB of compliment color
+     */
+    public static int getComplimentColor(int color) {
+        // get existing colors
+        int alpha = Color.alpha(color);
+        int red = Color.red(color);
+        int blue = Color.blue(color);
+        int green = Color.green(color);
+
+        // find compliments
+        red = (~red) & 0xff;
+        blue = (~blue) & 0xff;
+        green = (~green) & 0xff;
+
+        return Color.argb(alpha, red, green, blue);
+    }
+
+
     @Override
     public void success(Game game, Response response) {
         if (game != null) {
-            Log.d("GAME", "ready");
+
+            Log.d("GAME","ready");
+            titleText.setText("This is your target color! GO!");
+
+
+
+            titleText.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    titleText.animate().alpha(0).setDuration(200).setListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animator) {
+                            titleText.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animator) {
+
+                        }
+                    }).start();
+                }
+            },5000);
+
             this.gameView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw() {
                     gameView.getViewTreeObserver().removeOnPreDrawListener(this);
                     gameView.setAlpha(0);
                     gameView.animate().alpha(1).setDuration(1000).start();
+
+                    titleText.setAlpha(0);
+                    titleText.setVisibility(View.VISIBLE);
+                    titleText.animate().alpha(1).setDuration(200).start();
+
                     return true;
                 }
             });
-            this.gameView.setBackgroundColor(Color.parseColor(game.getTargetColor()));
+            int color = Color.parseColor(game.getTargetColor());
+            this.gameView.setBackgroundColor(color);
+            this.titleText.setTextColor(getComplimentColor(color));
         }
     }
 
@@ -480,7 +545,12 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
 
     @Override
     public void onSocketError(String message) {
-        Crouton.makeText(this, message, Style.ALERT).show();
+        try {
+            Crouton.makeText(this, message, Style.ALERT).show();
+        } catch (Exception e)
+        {
+            
+        }
     }
 
     @Override

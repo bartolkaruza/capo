@@ -49,7 +49,7 @@ public class MeasurementSender {
         try {
             // socket = new SocketIO("http://192.168.1.88:3000/");
             // socket = new SocketIO("http://bartolkaruza-measure-app.nodejitsu.com/");
-            socket = new SocketIO(GameRESTful.END_POINT);
+            socket = new SocketIO(GameRESTful.SOCKET_ENDPOINT);
         }
         catch (MalformedURLException e) {
             e.printStackTrace();
@@ -75,7 +75,7 @@ public class MeasurementSender {
             @Override
             public void onError(SocketIOException socketIOException) {
                 Log.e("onError", socketIOException.getMessage());
-                if (mCallback != null)
+                if (mCallback != null && socketIOException != null)
                     mCallback.onSocketError(socketIOException.getMessage());
             }
 

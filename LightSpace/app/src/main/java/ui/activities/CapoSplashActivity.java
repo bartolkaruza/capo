@@ -1,9 +1,11 @@
 package ui.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.EditText;
 
 import com.http.GameRESTfulService;
 import com.http.data.DeviceAddress;
@@ -25,6 +28,8 @@ import java.lang.reflect.Method;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 import io.blueapps.lightspace.BuildConfig;
 import io.blueapps.lightspace.ColorActivity;
 import io.blueapps.lightspace.DiscoActivity;
@@ -139,41 +144,72 @@ public class CapoSplashActivity extends Activity {
 
     @OnClick(R.id.startgame_button)
     public void onStartGameClick(View v) {
-        gameService.createGame("game01", new Callback<Game>() {
-            @Override
-            public void success(Game game, Response response) {
-                Intent inte = new Intent(CapoSplashActivity.this, GameActivity.class);
-                inte.putExtra(GameActivity.KEY_MODE, GameActivity.MODE_HOST);
-                inte.putExtra(GameActivity.KEY_ADRESS, address.getDeviceAddress());
-                inte.putExtra(GameActivity.KEY_GAME_ID, game.getName());
-                startActivity(inte);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-
-            }
-        });
+        askForGameID(GameActivity.MODE_HOST);
     }
 
     @OnClick(R.id.joingame_button)
     public void onJoinGameClick(View v) {
-        gameService.joinGame("game01", new Callback<Game>() {
-            @Override
-            public void success(Game game, Response response) {
-                Intent inte = new Intent(CapoSplashActivity.this, GameActivity.class);
-                inte.putExtra(GameActivity.KEY_MODE, GameActivity.MODE_JOIN);
-                inte.putExtra(GameActivity.KEY_ADRESS, address.getDeviceAddress());
-                inte.putExtra(GameActivity.KEY_GAME_ID, game.getName());
-                startActivity(inte);
-            }
+        askForGameID(GameActivity.MODE_JOIN);
+    }
 
-            @Override
-            public void failure(RetrofitError error) {
+    public void startGame(final int mode, String gameId)
+    {
+        if (mode == GameActivity.MODE_HOST) {
+            gameService.createGame(gameId, new Callback<Game>() {
+                @Override
+                public void success(Game game, Response response) {
+                    Intent inte = new Intent(CapoSplashActivity.this, GameActivity.class);
+                    inte.putExtra(GameActivity.KEY_MODE, mode);
+                    inte.putExtra(GameActivity.KEY_ADRESS, address.getDeviceAddress());
+                    inte.putExtra(GameActivity.KEY_GAME_ID, game.getName());
+                    startActivity(inte);
+                }
 
+                @Override
+                public void failure(RetrofitError error) {
+                    Crouton.makeText(CapoSplashActivity.this, "Error creating Game. " + error.getMessage(), Style.ALERT).show();
+                }
+            });
+        }
+        else
+        {
+            gameService.joinGame(gameId, new Callback<Game>() {
+                @Override
+                public void success(Game game, Response response) {
+                    Intent inte = new Intent(CapoSplashActivity.this, GameActivity.class);
+                    inte.putExtra(GameActivity.KEY_MODE, mode);
+                    inte.putExtra(GameActivity.KEY_ADRESS, address.getDeviceAddress());
+                    inte.putExtra(GameActivity.KEY_GAME_ID, game.getName());
+                    startActivity(inte);
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Crouton.makeText(CapoSplashActivity.this, "Error creating Game. " + error.getMessage(), Style.ALERT).show();
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Crouton.cancelAllCroutons();
+    }
+
+    public void askForGameID(final int mode)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Game Title");
+        final EditText input = new EditText(this);
+        builder.setView(input);
+        builder.setPositiveButton("Play", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                startGame(mode, input.getText().toString());
             }
         });
-
+        builder.show();
     }
 
     @OnClick(R.id.device_button)
