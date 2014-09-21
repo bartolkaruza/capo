@@ -549,7 +549,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
             Crouton.makeText(this, message, Style.ALERT).show();
         } catch (Exception e)
         {
-            
+
         }
     }
 
