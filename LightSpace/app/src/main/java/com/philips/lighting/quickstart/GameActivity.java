@@ -400,7 +400,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
         @Override
         public void onLeScan(final BluetoothDevice device, final int rssi, byte[] scanRecord) {
 
-            GameRESTfulService.getInstance().getGame("game01", new Callback<Game>() {
+            GameRESTfulService.getInstance().getGame(gameID, new Callback<Game>() {
                 @Override
                 public void success(Game game, Response response) {
                     GameValues[] values = game.getValues();
