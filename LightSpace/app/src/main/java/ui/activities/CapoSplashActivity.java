@@ -260,6 +260,9 @@ public class CapoSplashActivity extends Activity {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 // Add the name and address to an array adapter to show in a ListView
                 Log.d("BLUETOOTH",device.getAddress());
+                short rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI,(short) 0);
+
+                Log.d("BLUETOOTH",device.getAddress() + " rssi:" + rssi);
             }
         }
     };
