@@ -77,7 +77,7 @@ public class MeasurementSender {
 
                     try {
                         Gson gson = new Gson();
-                        ColorUpdate color = gson.fromJson((String) (objects[0]), ColorUpdate.class);
+                        ColorUpdate color = gson.fromJson(((JSONObject) (objects[0])).toString(), ColorUpdate.class);
                         if (mCallback != null)
                             mCallback.onHueChanged(color.getCurrentColor());
                     } catch (Exception e) {
