@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.http.GameRESTfulService;
 import com.http.data.DeviceAddress;
 import com.http.data.Game;
+import com.http.data.GameColor;
 import com.philips.lighting.data.AccessPointListAdapter;
 import com.philips.lighting.data.HueSharedPreferences;
 import com.philips.lighting.hue.sdk.PHAccessPoint;
@@ -153,7 +154,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
         initBT();
 
         if (this.mode == MODE_HOST) {
-            //initHUEAPI();
+            initHUEAPI();
         }
     }
 
@@ -626,8 +627,11 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
     }
 
     @Override
-    public void onHueChanged(String value) {
-
+    public void onHueChanged(GameColor value) {
+        if (mode == MODE_HOST)
+        {
+            setHueDiscoColor(value.getRed(), value.getGreen(), value.getBlue());
+        }
     }
 
     @Override

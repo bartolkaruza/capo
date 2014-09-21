@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.http.GameRESTful;
+import com.http.data.GameColor;
 
 import org.json.JSONObject;
 
@@ -36,7 +37,7 @@ public class MeasurementSender {
 
         public void onSocketError(String message);
 
-        public void onHueChanged(String value);
+        public void onHueChanged(GameColor value);
 
         public void onGameOver();
     }
@@ -69,6 +70,17 @@ public class MeasurementSender {
 
             @Override
             public void on(String s, IOAcknowledge ioAcknowledge, Object... objects) {
+
+                try {
+                    Gson gson = new Gson();
+                    GameColor color = gson.fromJson(s, GameColor.class);
+                    if (mCallback != null)
+                        mCallback.onHueChanged(color);
+                } catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
                 Log.d("on", s);
             }
 
