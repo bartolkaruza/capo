@@ -75,7 +75,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
 
     private static final long SCAN_PERIOD = 100000;
     private static final int REQUEST_ENABLE_BT = 1;
-    private static final long UPDATE_MEASUREMENT_INTERVAL = 5000;
+    private static final long UPDATE_MEASUREMENT_INTERVAL = 3000;
     private long lastUpdateMeasurementTime = 0;
 
     private int mode = MODE_JOIN;
@@ -128,7 +128,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
         initSockets();
 
         if (this.mode == MODE_HOST) {
-            initHUEAPI();
+            //initHUEAPI();
         }
     }
 
@@ -390,7 +390,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mode == MODE_HOST) {
+        if (mode == MODE_HOST && phHueSDK != null) {
             if (listener != null) {
                 phHueSDK.getNotificationManager().unregisterSDKListener(listener);
             }
@@ -438,7 +438,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
         @Override
         public void onLeScan(final BluetoothDevice device, final int rssi, byte[] scanRecord) {
             MyBluetoothDevice bluetoothDevice = new MyBluetoothDevice(device, rssi);
-            List<MeasurementPair> pairs = new ArrayList<MeasurementPair>();
+
             MeasurementPair pair = new MeasurementPair();
             String deviceAddress = "";
 
@@ -447,13 +447,11 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
                 pair.setDeviceAddress(deviceAddress);
                 pair.setRssi(bluetoothDevice.getRssi());
 
-                pairs.add(pair);
-            }
 
-            if (System.currentTimeMillis() > (lastUpdateMeasurementTime + UPDATE_MEASUREMENT_INTERVAL)) {
-                rssiSender.updateMeasurement(pairs, gameID);
-                lastUpdateMeasurementTime = System.currentTimeMillis();
             }
+                rssiSender.updateMeasurement(pair, gameID);
+                lastUpdateMeasurementTime = System.currentTimeMillis();
+
         }
     };
 

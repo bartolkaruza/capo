@@ -80,6 +80,7 @@ public class MeasurementSender {
                     Log.e("onError", "cause: " + cause.getMessage());
                 }
                 if (mCallback != null && socketIOException != null)
+
                     mCallback.onSocketError(socketIOException.getMessage());
             }
 
@@ -104,7 +105,7 @@ public class MeasurementSender {
         socket.disconnect();
     }
 
-    public void updateMeasurement(List<MeasurementPair> measurements, String gameId) {
+    public void updateMeasurement(MeasurementPair measurements, String gameId) {
         String time = DateFormat.getDateTimeInstance().format(new Date(System.currentTimeMillis()));
         if (socket != null && socket.isConnected()) {
             Gson gson = new Gson();
