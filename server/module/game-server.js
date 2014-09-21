@@ -41,9 +41,15 @@ exports.handleGetGame = function(req, resp) {
 exports.handleJoin = function(req, resp) {
     var id = req.params['id'];
     var game = games[id];
-    game.values.push({address:req.body.deviceAddress, playerNumber:(game.values.length + 1)});
-    if(game.values.length > 2) game.status = 'started';
-    resp.send(200, game);
+    if(game) {
+        game.values.push({address:req.body.deviceAddress, playerNumber:(game.values.length + 1)});
+        if(game.values.length > 2) game.status = 'started';
+        resp.send(200, game);
+    } else {
+        resp.send(400, "game not found");
+    }
+
+
 };
 
 var mapping = {
