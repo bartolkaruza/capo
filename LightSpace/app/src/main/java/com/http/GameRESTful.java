@@ -30,6 +30,9 @@ public interface GameRESTful {
     @GET("/game/{gameId}")
     void getGame(@Path("gameId") String gameId, Callback<Game> cb);
 
+    @GET("/testMeasurement/{gameId}")
+    void getCurrentColor(@Path("gameId") String gameId, Callback<Game> cb);
+
     @POST("/game/{gameId}/join")
     void joinGame(@Path("gameId") String gameId, @Body DeviceAddress deviceAddress, Callback<Game> cb);
 }
