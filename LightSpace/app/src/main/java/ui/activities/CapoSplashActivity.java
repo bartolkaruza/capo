@@ -207,6 +207,7 @@ public class CapoSplashActivity extends Activity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Game Title");
         final EditText input = new EditText(this);
+        input.setText(R.string.default_team_name);
         builder.setView(input);
         builder.setPositiveButton("Play", new DialogInterface.OnClickListener() {
             @Override
