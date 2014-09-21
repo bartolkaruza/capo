@@ -3,9 +3,11 @@ var io;
 
 var games = {};
 var gamesList = [];
+var currentSocket;
 exports.init = function(socketIo) {
     io = socketIo;
     io.sockets.on('connection', function (socket) {
+        currentSocket = socket;
         socket.on('foo', function(message) {
             socket.emit('bar', message);
             console.log(message);
@@ -45,6 +47,7 @@ exports.handleJoin = function(req, resp) {
         game.values.push({address:req.body.deviceAddress, playerNumber:(game.values.length + 1)});
         if(game.values.length > 2) game.status = 'started';
         resp.send(200, game);
+        currentSocket.emitted_end("join", game);
     } else {
         resp.send(400, "game not found");
     }
