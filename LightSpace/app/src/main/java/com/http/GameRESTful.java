@@ -6,6 +6,7 @@ import com.http.data.Game;
 
 import java.util.List;
 
+import io.blueapps.lightspace.socket.MeasureEvent;
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -29,9 +30,6 @@ public interface GameRESTful {
 
     @GET("/game/{gameId}")
     void getGame(@Path("gameId") String gameId, Callback<Game> cb);
-
-    @GET("/testMeasurement/{gameId}")
-    void getCurrentColor(@Path("gameId") String gameId, Callback<Game> cb);
 
     @POST("/game/{gameId}/join")
     void joinGame(@Path("gameId") String gameId, @Body DeviceAddress deviceAddress, Callback<Game> cb);
