@@ -10,9 +10,15 @@
     android:minWidth="300dp" >
 
     <ui.widgets.CapoTextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/game_status_text"/>
+        android:id="@+id/game_status_text"
+        android:text="Something"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="40dp"
+        android:visibility="gone"
+        style="@style/gameScreenMessage" />
 
 
     <ListView
