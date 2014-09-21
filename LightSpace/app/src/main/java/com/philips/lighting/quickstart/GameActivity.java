@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,7 +23,6 @@ import android.widget.TextView;
 import com.http.GameRESTfulService;
 import com.http.data.DeviceAddress;
 import com.http.data.Game;
-import com.http.data.GameValues;
 import com.philips.lighting.data.AccessPointListAdapter;
 import com.philips.lighting.data.HueSharedPreferences;
 import com.philips.lighting.hue.sdk.PHAccessPoint;
@@ -127,46 +125,39 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
         initBLE();
         initSockets();
 
-
-
         if (this.mode == MODE_HOST) {
             initHUEAPI();
         }
     }
 
+    public void setHueDiscoColor(int... colors) {
+        PHBridge bridge = phHueSDK.getSelectedBridge();
 
+        if (bridge != null) {
+            List<PHLight> allLights = bridge.getResourceCache().getAllLights();
+            int i = 0;
+            for (PHLight light : allLights) {
+                int r = (colors[i] >> 16) & 0xFF;
+                int g = (colors[i] >> 8) & 0xFF;
+                int b = (colors[i] >> 0) & 0xFF;
 
-        public void setHueDiscoColor(int... colors) {
-            PHBridge bridge = phHueSDK.getSelectedBridge();
+                float xy[] = PHUtilities.calculateXYFromRGB(r, g, b, light.getModelNumber());
+                PHLightState lightState = new PHLightState();
+                lightState.setX(xy[0]);
+                lightState.setY(xy[1]);
+                lightState.setAlertMode(PHLight.PHLightAlertMode.ALERT_SELECT);
+                lightState.setColorMode(PHLight.PHLightColorMode.COLORMODE_XY);
+                lightState.setBrightness(50);
 
-            if (bridge != null) {
-                List<PHLight> allLights = bridge.getResourceCache().getAllLights();
-                int i = 0;
-                for (PHLight light : allLights) {
-                    int r = (colors[i] >> 16) & 0xFF;
-                    int g = (colors[i] >> 8) & 0xFF;
-                    int b = (colors[i] >> 0) & 0xFF;
-
-                    float xy[] = PHUtilities.calculateXYFromRGB(r, g, b, light.getModelNumber());
-                    PHLightState lightState = new PHLightState();
-                    lightState.setX(xy[0]);
-                    lightState.setY(xy[1]);
-                    lightState.setAlertMode(PHLight.PHLightAlertMode.ALERT_SELECT);
-                    lightState.setColorMode(PHLight.PHLightColorMode.COLORMODE_XY);
-                    lightState.setBrightness(50);
-
-                    // lightState.setHue(rand.nextInt(MAX_HUE));
-                    // To validate your lightstate is valid (before sending to the bridge) you can use:
-                    // String validState = lightState.validateState();
-                    // bridge.updateLightState(light, lightState, listener);
-                    bridge.updateLightState(light, lightState); // If no bridge response is required then use this simpler form.
-                    i++;
-                }
+                // lightState.setHue(rand.nextInt(MAX_HUE));
+                // To validate your lightstate is valid (before sending to the bridge) you can use:
+                // String validState = lightState.validateState();
+                // bridge.updateLightState(light, lightState, listener);
+                bridge.updateLightState(light, lightState); // If no bridge response is required then use this simpler form.
+                i++;
             }
         }
-
-
-
+    }
 
     public void setActivityBackgroundColor(int color) {
         View view = this.getWindow().getDecorView();
@@ -440,39 +431,20 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
 
         @Override
         public void onLeScan(final BluetoothDevice device, final int rssi, byte[] scanRecord) {
+            MyBluetoothDevice bluetoothDevice = new MyBluetoothDevice(device, rssi);
+            List<MeasurementPair> pairs = new ArrayList<MeasurementPair>();
+            MeasurementPair pair = new MeasurementPair();
+            String deviceAddress = "";
 
-            GameRESTfulService.getInstance().getGame(gameID, new Callback<Game>() {
-                @Override
-                public void success(Game game, Response response) {
-                    GameValues[] values = game.getValues();
+            if (bluetoothDevice != null && bluetoothDevice.getDevice() != null) {
+                deviceAddress = bluetoothDevice.getDevice().getAddress();
+                pair.setDeviceAddress(deviceAddress);
+                pair.setRssi(bluetoothDevice.getRssi());
 
-                    MyBluetoothDevice bluetoothDevice = new MyBluetoothDevice(device, rssi);
-                    List<MeasurementPair> pairs = new ArrayList<MeasurementPair>();
-                    MeasurementPair pair = new MeasurementPair();
-                    String deviceAddress = "";
+                pairs.add(pair);
+            }
 
-                    setHueDiscoColor(new int[]{game.getCurrentColor().getRed(), game.getCurrentColor().getGreen(), game.getCurrentColor().getBlue()});
-
-                    if (bluetoothDevice != null && bluetoothDevice.getDevice() != null) {
-                        deviceAddress = bluetoothDevice.getDevice().getAddress();
-                        pair.setDeviceAddress(deviceAddress);
-                        pair.setRssi(bluetoothDevice.getRssi());
-                    }
-
-                    for (GameValues gv : values) {
-                        if (deviceAddress.equalsIgnoreCase(gv.getAddress())) {
-                            pairs.add(pair);
-                            rssiSender.updateMeasurement(pairs);
-                        }
-                    }
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-
-                }
-            });
-
+            rssiSender.updateMeasurement(pairs);
         }
     };
 
@@ -525,6 +497,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
 
             Log.d("GAME", "ready");
             titleText.setText("This is your target color! GO!");
+
             titleText.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -581,7 +554,7 @@ public class GameActivity extends Activity implements OnItemClickListener, Callb
     @Override
     public void onConnected() {
 
-//        Crouton.makeText(this, "Connection established.", Style.CONFIRM).show();
+        // Crouton.makeText(this, "Connection established.", Style.CONFIRM).show();
     }
 
     @Override

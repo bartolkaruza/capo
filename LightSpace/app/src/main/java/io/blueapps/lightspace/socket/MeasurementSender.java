@@ -110,7 +110,6 @@ public class MeasurementSender {
             Log.d("sender", "sending measurement with: " + time);
             Gson gson = new Gson();
             String s = gson.toJson(new MeasureEvent(CapoSplashActivity.address.getDeviceAddress(), measurements));
-            Log.d("request", s);
             socket.emit("measurement", s);
         }
         else
